@@ -35,6 +35,10 @@ pub struct StyleAssets {
     pub loot: Handle<StyleSheetAsset>,
     #[asset(path = "sheets/main_menu.css")]
     pub main_menu: Handle<StyleSheetAsset>,
+    #[asset(path = "sheets/summon_button.css")]
+    pub summon_button: Handle<StyleSheetAsset>,
+    #[asset(path = "sheets/summon_scroll.css")]
+    pub summon_scroll: Handle<StyleSheetAsset>,
 }
 
 #[derive(AssetCollection, Resource)]

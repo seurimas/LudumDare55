@@ -1,0 +1,34 @@
+.summon_button {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+    align-items: center;
+    margin: 8px;
+}
+
+.summon_button__bg {
+    position-type: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.summon_button__bg.selected {
+    background-color: #99f;
+}
+
+.summon_button__icon {
+    width: 50%;
+    height: 50%;
+}
+
+.summon_button__name {
+    color: black;
+}
+
+.summon_button__mana_cost {
+    color: blue;
+}

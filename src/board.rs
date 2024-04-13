@@ -8,7 +8,13 @@ impl Plugin for BoardPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<BoardMouseState>()
             .add_systems(OnExit(GameState::Menu), setup)
-            .add_systems(Update, mouse_over_tiles)
+            .add_systems(
+                Update,
+                (
+                    mouse_over_tiles.run_if(in_state(GameState::Summoning)),
+                    mouse_over_tiles.run_if(in_state(GameState::Battling)),
+                ),
+            )
             .add_systems(
                 Update,
                 move_board_to_left.run_if(in_state(GameState::Summoning)),

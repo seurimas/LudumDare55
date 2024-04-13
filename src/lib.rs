@@ -19,8 +19,8 @@ impl Plugin for GamePlugin {
             .add_plugins(menu::MenuPlugin)
             .add_plugins(loading::LoadingPlugin)
             .add_plugins(board::BoardPlugin)
-            .add_plugins(summons::SummonsPlugin)
             .add_plugins(battle::BattlePlugin)
+            .add_plugins(summoner::SummonerPlugin)
             .init_state::<GameState>();
     }
 }

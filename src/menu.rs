@@ -37,7 +37,7 @@ fn setup_menu(mut commands: Commands, styles: Res<StyleAssets>) {
         .spawn((
             NodeBundle { ..default() },
             StyleSheet::new(styles.main_menu.clone()),
-            Name::new("main_menu"),
+            Class::new("main_menu"),
             Menu,
         ))
         .with_children(|children| {
@@ -56,7 +56,7 @@ fn setup_menu(mut commands: Commands, styles: Res<StyleAssets>) {
                         ..Default::default()
                     },
                     button_colors,
-                    Name::new("main_menu__play"),
+                    Class::new("main_menu__play"),
                     ChangeState(GameState::Summoning),
                 ))
                 .with_children(|parent| {
@@ -105,7 +105,7 @@ fn setup_menu(mut commands: Commands, styles: Res<StyleAssets>) {
                         normal: Color::NONE,
                         hovered: Color::rgb(0.25, 0.25, 0.25),
                     },
-                    Name::new("main_menu__open_source"),
+                    Class::new("main_menu__open_source"),
                     OpenLink("https://github.com/NiklasEi/bevy_game_template"),
                 ))
                 .with_children(|parent| {
@@ -157,12 +157,8 @@ fn click_play_button(
     }
 }
 
-fn hide_menu(world: &mut World) {
-    let mut query = world
-        .query_filtered::<Entity, With<Menu>>()
-        .iter(world)
-        .collect::<Vec<_>>();
-    for entity in query.drain(..) {
-        despawn_with_children_recursive(world, entity);
+fn hide_menu(mut commands: Commands, query: Query<Entity, With<Menu>>) {
+    for entity in query.iter() {
+        commands.entity(entity).despawn_recursive();
     }
 }

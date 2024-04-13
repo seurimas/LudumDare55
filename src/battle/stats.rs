@@ -62,6 +62,7 @@ impl Movement {
 
 #[derive(Component, Debug, Clone, PartialEq, Eq)]
 pub struct CharacterStats {
+    pub max_health: i32,
     pub health: i32,
     pub stamina: i32,
     pub stamina_regen: i32,

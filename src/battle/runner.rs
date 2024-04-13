@@ -17,7 +17,7 @@ impl Default for BattleSpeed {
 pub fn prune_dead_entities(mut commands: Commands, query: Query<(Entity, &CharacterStats)>) {
     for (entity, stats) in query.iter() {
         if stats.health <= 0 {
-            commands.entity(entity).despawn();
+            commands.entity(entity).despawn_recursive();
         }
     }
 }
@@ -100,7 +100,7 @@ pub fn run_battle(
     if let Ok((entity, faction, mut summon, mut stats, mut brain)) = fighters.get_mut(next_turn) {
         info!("Stats ({:?}): {:?}", faction, stats);
         if stats.health == 0 {
-            commands.entity(entity).despawn();
+            commands.entity(entity).despawn_recursive();
         }
         let model = BehaviorModel {
             position: (summon.x, summon.y),
