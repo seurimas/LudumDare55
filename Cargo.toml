@@ -1,0 +1,15 @@
+[package]
+name = "LudumDare55"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+bevy = "0.13"
+rand = "0.8"
+bevy_asset_loader = { version = "0.20" }
+
+# Enable max optimizations for dependencies, but not for our code:
+[profile.dev.package."*"]
+opt-level = 3
+
