@@ -1,0 +1,5 @@
+SummonType (
+    summon_name: "Watcher",
+    sprite_idx: 4,
+    mana_cost: 1,
+)

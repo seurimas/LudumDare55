@@ -1,0 +1,5 @@
+SummonType (
+    summon_name: "Skeleton",
+    sprite_idx: 2,
+    mana_cost: 1,
+)

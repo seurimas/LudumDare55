@@ -1,0 +1,5 @@
+SummonType (
+    summon_name: "Angel",
+    sprite_idx: 3,
+    mana_cost: 2,
+)

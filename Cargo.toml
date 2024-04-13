@@ -7,7 +7,9 @@ edition = "2021"
 [dependencies]
 bevy = "0.13"
 rand = "0.8"
-bevy_asset_loader = { version = "0.20" }
+bevy_asset_loader = { version = "0.20", features = ["2d"] }
+bevy_common_assets = { version = "0.10", features = ["ron"] }
+serde = { version = "1.0", features = ["derive"] }
 
 # Enable max optimizations for dependencies, but not for our code:
 [profile.dev.package."*"]
