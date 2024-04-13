@@ -1,13 +1,47 @@
-use crate::{prelude::*, summoner::spawn_summon_button};
+use crate::{
+    prelude::*,
+    summoner::{spawn_summon_button, SummonButton},
+};
 
 #[derive(Component)]
 pub struct LootScreen;
+
+#[derive(Component)]
+pub struct LootButton(pub SummonType);
 
 pub fn setup_loot_screen(
     mut commands: Commands,
     styles: Res<StyleAssets>,
     texture_assets: Res<TextureAssets>,
+    summons_assets: Res<SummonsAssets>,
+    known_summons: Res<KnownSummons>,
+    assets_summon_types: Res<Assets<SummonType>>,
+    mana: Res<Mana>,
 ) {
+    let mut available_summons = summons_assets
+        .player_summons
+        .values()
+        .filter(|summon| {
+            let summon_type = assets_summon_types.get(*summon).unwrap();
+            if known_summons.has(&summon_type.name().to_string()) {
+                return false;
+            }
+            let prerequisites = summon_type.prerequisites();
+            if prerequisites.1.is_none() {
+                mana.max_mana >= prerequisites.0
+            } else {
+                known_summons.has(&prerequisites.1.unwrap()) && mana.max_mana >= prerequisites.0
+            }
+        })
+        .collect::<Vec<_>>();
+    let mut pickable_summons = vec![];
+    for _ in 0..3 {
+        if !available_summons.is_empty() {
+            let idx = rand::thread_rng().gen_range(0..available_summons.len());
+            pickable_summons.push(available_summons.remove(idx));
+        }
+    }
+    let mut buttons = vec![];
     commands
         .spawn((
             NodeBundle::default(),
@@ -33,11 +67,47 @@ pub fn setup_loot_screen(
             parent
                 .spawn((NodeBundle::default(), Class::new("loot__summons")))
                 .with_children(|parent| {
-                    for _ in 0..3 {
-                        spawn_summon_button(parent, &styles, &texture_assets, &SummonType::debug());
+                    for summon in pickable_summons {
+                        let summon = assets_summon_types.get(summon).unwrap();
+                        let button = spawn_summon_button(parent, &styles, &texture_assets, summon);
+                        buttons.push((button, LootButton(summon.clone())));
                     }
                 });
         });
+    for (button, component) in buttons {
+        commands.entity(button).insert(component);
+    }
+}
+
+pub fn handle_loot_button_click(
+    mut state: ResMut<NextState<GameState>>,
+    mut known_summons: ResMut<KnownSummons>,
+    mut query: Query<
+        (&mut Class, &mut SummonButton, &LootButton, &Interaction),
+        Changed<Interaction>,
+    >,
+) {
+    for (mut class, mut summon, loot, interaction) in query.iter_mut() {
+        match *interaction {
+            Interaction::Pressed => {
+                if summon.0 {
+                    state.set(GameState::Summoning);
+                    known_summons.add(loot.0.clone());
+                } else {
+                    summon.0 = true;
+                    class.add("selected");
+                }
+            }
+            Interaction::Hovered => {
+                class.add("hovered");
+            }
+            Interaction::None => {
+                summon.0 = false;
+                class.remove("hovered");
+                class.remove("selected");
+            }
+        }
+    }
 }
 
 pub fn cleanup_loot_screen(mut commands: Commands, query: Query<Entity, With<LootScreen>>) {

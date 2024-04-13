@@ -6,7 +6,7 @@ pub use crate::board::BoardMouseState;
 pub use crate::bt::*;
 pub use crate::loading::{AudioAssets, BrainAssets, StyleAssets, SummonsAssets, TextureAssets};
 pub use crate::state::GameState;
-pub use crate::summoner::{KnownSummons, SummonedMinions};
+pub use crate::summoner::{KnownSummons, Mana, SummonedMinions};
 pub use crate::summons::{spawn_summon, Summon, SummonType};
 pub use bevy::prelude::*;
 pub use bevy::utils::HashMap;

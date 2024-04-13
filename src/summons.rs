@@ -11,6 +11,7 @@ pub struct SummonType {
     attacks: Vec<Attack>,
     movements: Vec<Movement>,
     brain: String,
+    prerequisites: (i32, Option<String>),
 }
 
 impl SummonType {
@@ -25,6 +26,7 @@ impl SummonType {
             attacks: vec![Attack::debug()],
             movements: vec![Movement::debug()],
             brain: "fighter".to_string(),
+            prerequisites: (0, None),
         }
     }
 
@@ -42,6 +44,10 @@ impl SummonType {
 
     pub fn mana_cost(&self) -> i32 {
         self.mana_cost
+    }
+
+    pub fn prerequisites(&self) -> (i32, Option<String>) {
+        self.prerequisites.clone()
     }
 }
 

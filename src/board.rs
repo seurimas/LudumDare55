@@ -8,13 +8,7 @@ impl Plugin for BoardPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<BoardMouseState>()
             .add_systems(OnExit(GameState::Menu), setup)
-            .add_systems(
-                Update,
-                (
-                    mouse_over_tiles.run_if(in_state(GameState::Summoning)),
-                    mouse_over_tiles.run_if(in_state(GameState::Battling)),
-                ),
-            )
+            .add_systems(Update, mouse_over_tiles)
             .add_systems(
                 Update,
                 move_board_to_left.run_if(in_state(GameState::Summoning)),
@@ -22,6 +16,14 @@ impl Plugin for BoardPlugin {
             .add_systems(
                 Update,
                 move_board_to_center.run_if(in_state(GameState::Battling)),
+            )
+            .add_systems(
+                OnEnter(GameState::Summoning),
+                enable_picking.run_if(in_state(GameState::Summoning)),
+            )
+            .add_systems(
+                OnExit(GameState::Summoning),
+                disable_picking.run_if(in_state(GameState::Summoning)),
             );
     }
 }
@@ -30,6 +32,7 @@ impl Plugin for BoardPlugin {
 pub struct Tile {
     pub x: usize,
     pub y: usize,
+    pub can_place: bool,
 }
 
 #[derive(Component)]
@@ -38,6 +41,16 @@ pub struct BorderTile;
 #[derive(Resource, Default)]
 pub struct BoardMouseState {
     pub hovered_tile: Option<(usize, usize)>,
+    pub pickable_tile: Option<(usize, usize)>,
+    pub can_place: bool,
+}
+
+fn disable_picking(mut board_mouse_state: ResMut<BoardMouseState>) {
+    board_mouse_state.can_place = false;
+}
+
+fn enable_picking(mut board_mouse_state: ResMut<BoardMouseState>) {
+    board_mouse_state.can_place = true;
 }
 
 fn setup(
@@ -67,7 +80,11 @@ fn setup(
                 ),
                 ..Default::default()
             },
-            Tile { x, y },
+            Tile {
+                x,
+                y,
+                can_place: y <= 2,
+            },
         ));
     }
     let tile_borders = vec![8, 9, 8, 9, 8, 9, 8, 9];
@@ -123,6 +140,10 @@ fn mouse_over_tiles(
     )>,
 ) {
     board_mouse_state.hovered_tile = None;
+    board_mouse_state.pickable_tile = None;
+    if board_mouse_state.can_place == false {
+        return;
+    }
     if let (Some(position), Some((camera, camera_transform))) =
         (q_windows.single().cursor_position(), camera.iter().next())
     {
@@ -145,8 +166,13 @@ fn mouse_over_tiles(
                     && position.y > y
                     && position.y < y + TILE_SIZE
                 {
-                    sprite.color = Color::rgb(0.5, 0.5, 0.5);
                     board_mouse_state.hovered_tile = Some((tile.x, tile.y));
+                    if tile.can_place {
+                        sprite.color = Color::rgb(0.5, 0.5, 0.5);
+                        board_mouse_state.pickable_tile = Some((tile.x, tile.y));
+                    } else {
+                        sprite.color = Color::rgb(0.8, 0.8, 0.8);
+                    }
                 } else {
                     sprite.color = Color::WHITE;
                 }

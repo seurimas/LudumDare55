@@ -52,16 +52,14 @@ pub struct TextureAssets {
     pub summon: Handle<Image>,
     #[asset(path = "ScrollBack.png")]
     pub scroll_back: Handle<Image>,
+    #[asset(path = "ScrollSide.png")]
+    pub scroll_side: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
 pub struct SummonsAssets {
-    #[asset(path = "summons/angel.summon")]
-    pub angel: Handle<SummonType>,
-    #[asset(path = "summons/skeleton.summon")]
-    pub skeleton: Handle<SummonType>,
-    #[asset(path = "summons/watcher.summon")]
-    pub watcher: Handle<SummonType>,
+    #[asset(path = "summons", collection(typed, mapped))]
+    pub player_summons: HashMap<FileStem, Handle<SummonType>>,
 }
 
 #[derive(AssetCollection, Resource)]

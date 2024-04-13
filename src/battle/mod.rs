@@ -36,6 +36,10 @@ impl Plugin for BattlePlugin {
                     .run_if(in_state(GameState::Battling)),
             )
             .add_systems(OnEnter(GameState::Looting), setup_loot_screen)
+            .add_systems(
+                Update,
+                handle_loot_button_click.run_if(in_state(GameState::Looting)),
+            )
             .add_systems(OnExit(GameState::Looting), cleanup_loot_screen);
     }
 }
@@ -52,13 +56,11 @@ fn debug_battle_start_system(
     brain_assets: Res<Assets<CharacterBrainDef>>,
 ) {
     if keys.just_pressed(KeyCode::Enter) {
-        info!("Battle system");
         for entity in summon_entities.iter() {
             commands.entity(entity).despawn_recursive();
         }
         next_state.0 = Some(GameState::Battling);
         for (x, y, summon) in summoned.drain_summons() {
-            info!("Summon at {},{} is {:?}", x, y, summon);
             let summon_type = known_summons.get(&summon);
             let summoned = spawn_summon(&mut commands, &textures, summon_type.clone(), x, y, true);
             let brain = summon_type.get_brain(&brains).unwrap();

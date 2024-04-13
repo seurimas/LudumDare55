@@ -31,7 +31,6 @@ impl Default for ButtonColors {
 struct Menu;
 
 fn setup_menu(mut commands: Commands, styles: Res<StyleAssets>) {
-    info!("menu");
     commands.spawn(Camera2dBundle::default());
     commands
         .spawn((
@@ -57,7 +56,7 @@ fn setup_menu(mut commands: Commands, styles: Res<StyleAssets>) {
                     },
                     button_colors,
                     Class::new("main_menu__play"),
-                    ChangeState(GameState::Summoning),
+                    ChangeState(GameState::Looting),
                 ))
                 .with_children(|parent| {
                     parent.spawn(TextBundle::from_section(

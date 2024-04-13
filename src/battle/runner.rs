@@ -98,7 +98,6 @@ pub fn run_battle(
     let next_turn = turn_order.order.pop().unwrap();
     let mut attacks = vec![];
     if let Ok((entity, faction, mut summon, mut stats, mut brain)) = fighters.get_mut(next_turn) {
-        info!("Stats ({:?}): {:?}", faction, stats);
         if stats.health == 0 {
             commands.entity(entity).despawn_recursive();
         }
@@ -122,7 +121,6 @@ pub fn run_battle(
                     .collect(),
             },
         };
-        info!("{:?}", model);
         let mut controller = BehaviorController {
             actions: vec![],
             picked_location: None,

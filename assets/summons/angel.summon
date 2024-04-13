@@ -12,4 +12,5 @@ SummonType (
         Movement (stamina_cost: 3, tiles: 1),
     ],
     brain: "fighter",
+    prerequisites: (1, None),
 )

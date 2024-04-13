@@ -107,7 +107,6 @@ impl UnpoweredFunction for SummonBehaviors {
         model: &Self::Model,
         controller: &mut Self::Controller,
     ) -> UnpoweredFunctionState {
-        info!("self: {:?}", self);
         match self {
             SummonBehaviors::FindNearestEnemy => {
                 if let Some(enemy) = model.find_nearest_enemy() {

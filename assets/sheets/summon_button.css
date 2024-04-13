@@ -14,9 +14,14 @@
     position-type: absolute;
     width: 100%;
     height: 100%;
+    background-color: #fff;
 }
 
-.summon_button__bg.selected {
+.hovered .summon_button__bg {
+    background-color: #999;
+}
+
+.selected .summon_button__bg {
     background-color: #99f;
 }
 
@@ -27,8 +32,18 @@
 
 .summon_button__name {
     color: black;
+    font-size: 14px;
+}
+
+.summon_button__hotkey {
+    position-type: absolute;
+    left: 8px;
+    top: 8px;
+    font-size: 20px;
+    color: #000;
 }
 
 .summon_button__mana_cost {
-    color: blue;
+    color: #77f;
+    font-size: 20px;
 }

@@ -16,6 +16,13 @@
     height: 100%;
 }
 
+.summon_scroll__side {
+    position-type: absolute;
+    left: -35px;
+    width: 70px;
+    height: 100%;
+}
+
 .summon_scroll {
     position-type: absolute;
     display: flex;
@@ -26,6 +33,7 @@
 
 .summon_scroll__summons {
     display: flex;
+    margin: 25px;
     flex-direction: row;
     flex-wrap: wrap;
 }

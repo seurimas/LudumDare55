@@ -1,5 +1,7 @@
 use crate::prelude::*;
 
+use super::{mana, HOTKEYS};
+
 #[derive(Serialize, Deserialize, Clone, Debug, Resource, Default)]
 pub struct SummonedMinions {
     spawn_locations: HashMap<(usize, usize), String>,
@@ -15,7 +17,6 @@ impl SummonedMinions {
 
     pub fn add_summon(&mut self, summon: SummonType, x: usize, y: usize) {
         self.mana += summon.mana_cost();
-        info!("Mana: {}", self.mana);
         self.spawn_locations
             .insert((x, y), summon.name().to_string());
         self.mana_locations.insert((x, y), summon.mana_cost());
@@ -27,7 +28,6 @@ impl SummonedMinions {
             self.mana_locations.remove(&(x, y)),
         ) {
             self.mana -= mana_cost;
-            info!("Mana: {}", self.mana);
             true
         } else {
             false
@@ -81,41 +81,40 @@ pub fn remove_summon(
     }
 }
 
-const DEBUG_SUMMONS: [&str; 3] = ["Skeleton", "Angel", "Watcher"];
-
 pub fn place_summon(
     mut commands: Commands,
     textures: Res<TextureAssets>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
+    button_input: Res<ButtonInput<MouseButton>>,
     board_mouse_state: Res<BoardMouseState>,
     known_summons: Res<KnownSummons>,
     mut summoned: ResMut<SummonedMinions>,
+    mana: Res<mana::Mana>,
 ) {
     if let Some((x, y)) = board_mouse_state.hovered_tile {
         if summoned.has_spawn_location(x, y) {
             return;
         }
-        for (i, key) in [
-            KeyCode::Numpad1,
-            KeyCode::Numpad2,
-            KeyCode::Numpad3,
-            KeyCode::Numpad4,
-            KeyCode::Numpad5,
-            KeyCode::Numpad6,
-            KeyCode::Numpad7,
-            KeyCode::Numpad8,
-            KeyCode::Numpad9,
-        ]
-        .iter()
-        .enumerate()
-        {
+        for (i, key) in HOTKEYS.iter().enumerate() {
             if i >= known_summons.length() as usize {
                 break;
             }
             if keyboard_input.just_pressed(*key) {
-                let summon = known_summons.get(&DEBUG_SUMMONS[i].to_string());
-                spawn_summon(&mut commands, &textures, summon.clone(), x, y, false);
-                summoned.add_summon(summon, x, y);
+                if known_summons.get_active() == known_summons.get_by_hotkey(*key) {
+                    let summon = known_summons.get_active().unwrap();
+                    if mana.mana_left() >= summon.mana_cost() {
+                        spawn_summon(&mut commands, &textures, summon.clone(), x, y, false);
+                        summoned.add_summon(summon, x, y);
+                    }
+                }
+            }
+        }
+        if button_input.just_pressed(MouseButton::Left) {
+            if let Some(summon) = known_summons.get_active() {
+                if mana.mana_left() >= summon.mana_cost() {
+                    spawn_summon(&mut commands, &textures, summon.clone(), x, y, false);
+                    summoned.add_summon(summon, x, y);
+                }
             }
         }
     }
