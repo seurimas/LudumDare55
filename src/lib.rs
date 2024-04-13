@@ -2,6 +2,7 @@ use prelude::*;
 
 mod battle;
 mod board;
+mod bt;
 mod loading;
 mod menu;
 mod prelude;

@@ -1,3 +1,5 @@
+use bevy::utils::HashMap;
+
 use crate::prelude::*;
 
 pub struct LoadingPlugin;
@@ -12,11 +14,13 @@ impl Plugin for LoadingPlugin {
                 .continue_to_state(GameState::Menu)
                 .load_collection::<AudioAssets>()
                 .load_collection::<TextureAssets>()
-                .load_collection::<SummonsAssets>(),
+                .load_collection::<SummonsAssets>()
+                .load_collection::<BrainAssets>(),
         )
         .add_plugins(bevy_common_assets::ron::RonAssetPlugin::<SummonType>::new(
             &["summon"],
-        ));
+        ))
+        .add_plugins(bevy_common_assets::ron::RonAssetPlugin::<CharacterBrainDef>::new(&["brain"]));
     }
 }
 
@@ -43,4 +47,10 @@ pub struct SummonsAssets {
     pub skeleton: Handle<SummonType>,
     #[asset(path = "summons/watcher.summon")]
     pub watcher: Handle<SummonType>,
+}
+
+#[derive(AssetCollection, Resource)]
+pub struct BrainAssets {
+    #[asset(path = "brains", collection(typed, mapped))]
+    pub brains: HashMap<FileStem, Handle<CharacterBrainDef>>,
 }

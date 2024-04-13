@@ -1,9 +1,15 @@
+pub use crate::battle::{
+    Action, Attack, BehaviorController, BehaviorModel, CharacterBrain, CharacterBrainDef,
+    CharacterStats, Faction, Movement,
+};
 pub use crate::board::BoardMouseState;
-pub use crate::loading::{AudioAssets, SummonsAssets, TextureAssets};
+pub use crate::bt::*;
+pub use crate::loading::{AudioAssets, BrainAssets, SummonsAssets, TextureAssets};
 pub use crate::state::GameState;
-pub use crate::summons::SummonType;
+pub use crate::summons::{KnownSummons, Summon, SummonType, SummonedMinions};
 pub use bevy::prelude::*;
 pub use bevy_asset_loader::prelude::*;
+pub use rand::prelude::*;
 pub use serde::{Deserialize, Serialize};
 
 pub use std::f32::consts::PI;

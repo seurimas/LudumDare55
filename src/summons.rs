@@ -15,11 +15,17 @@ impl Plugin for SummonsPlugin {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Hash, Asset, TypePath)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Asset, TypePath)]
 pub struct SummonType {
     summon_name: String,
     sprite_idx: usize,
-    mana_cost: u32,
+    mana_cost: i32,
+    health: i32,
+    stamina: i32,
+    stamina_regen: i32,
+    attacks: Vec<Attack>,
+    movements: Vec<Movement>,
+    brain: String,
 }
 
 impl SummonType {
@@ -27,19 +33,35 @@ impl SummonType {
         &self.summon_name
     }
 
+    pub fn get_brain(&self, brain_assets: &BrainAssets) -> Option<Handle<CharacterBrainDef>> {
+        brain_assets.brains.get(&*self.brain.as_str()).cloned()
+    }
+
     pub fn sprite_idx(&self) -> usize {
         self.sprite_idx
     }
 }
 
+impl Into<CharacterStats> for SummonType {
+    fn into(self) -> CharacterStats {
+        CharacterStats {
+            health: self.health,
+            stamina: self.stamina,
+            stamina_regen: self.stamina_regen,
+            attacks: self.attacks,
+            movements: self.movements,
+        }
+    }
+}
+
 #[derive(Resource, Default)]
 pub struct KnownSummons {
-    summons: Vec<SummonType>,
+    summons: HashMap<String, SummonType>,
 }
 
 impl KnownSummons {
-    pub fn get(&self, idx: usize) -> SummonType {
-        self.summons[idx].clone()
+    pub fn get(&self, name: &String) -> SummonType {
+        self.summons[name].clone()
     }
 
     pub fn length(&self) -> usize {
@@ -50,9 +72,9 @@ impl KnownSummons {
 #[derive(Serialize, Deserialize, Clone, Debug, Resource, Default)]
 pub struct SummonedMinions {
     spawn_locations: HashMap<(usize, usize), String>,
-    mana: u32,
+    mana: i32,
     #[serde(skip)]
-    mana_locations: HashMap<(usize, usize), u32>,
+    mana_locations: HashMap<(usize, usize), i32>,
 }
 
 impl SummonedMinions {
@@ -79,6 +101,16 @@ impl SummonedMinions {
             false
         }
     }
+
+    pub fn drain_summons(&mut self) -> Vec<(usize, usize, String)> {
+        let mut drained = Vec::new();
+        for ((x, y), summon_name) in self.spawn_locations.iter() {
+            drained.push((*x, *y, summon_name.clone()));
+        }
+        self.spawn_locations.clear();
+        self.mana_locations.clear();
+        drained
+    }
 }
 
 #[derive(Component)]
@@ -91,12 +123,11 @@ pub struct Summon {
 
 fn animate_summons(time: Res<Time>, mut query: Query<(&mut Summon, &mut Transform)>) {
     for (mut summon, mut transform) in query.iter_mut() {
-        let previous_offset = summon.time.sin() + PI;
         summon.time += time.delta_seconds();
         let offset = summon.time.sin() + PI;
-        if previous_offset != offset {
-            transform.translation.y += offset - previous_offset;
-        }
+        let translation =
+            tile_position_to_translation(summon.x as i32, summon.y as i32) + Vec2::new(0., offset);
+        transform.translation = translation.extend(1.);
     }
 }
 
@@ -106,11 +137,10 @@ pub fn setup_summons(
     summons_assets: Res<SummonsAssets>,
 ) {
     commands.insert_resource(KnownSummons {
-        summons: vec![
-            summon_types.get(&summons_assets.skeleton).unwrap().clone(),
-            summon_types.get(&summons_assets.watcher).unwrap().clone(),
-            summon_types.get(&summons_assets.angel).unwrap().clone(),
-        ],
+        summons: summon_types
+            .iter()
+            .map(|(handle, summon)| (summon.summon_name.clone(), summon.clone()))
+            .collect(),
     });
 }
 
@@ -135,6 +165,8 @@ pub fn remove_summon(
         }
     }
 }
+
+const DEBUG_SUMMONS: [&str; 3] = ["Skeleton", "Angel", "Watcher"];
 
 pub fn place_summon(
     mut commands: Commands,
@@ -166,7 +198,7 @@ pub fn place_summon(
                 break;
             }
             if keyboard_input.just_pressed(*key) {
-                let summon = known_summons.get(i);
+                let summon = known_summons.get(&DEBUG_SUMMONS[i].to_string());
                 spawn_summon(&mut commands, &textures, summon.clone(), x, y, false);
                 summoned.add_summon(summon, x, y);
             }
@@ -181,32 +213,34 @@ pub fn spawn_summon(
     x: usize,
     y: usize,
     real: bool,
-) {
-    commands.spawn((
-        SpriteSheetBundle {
-            texture: textures.board.clone(),
-            atlas: TextureAtlas {
-                index: summon_type.sprite_idx(),
-                layout: textures.board_layout.clone(),
-            },
-            sprite: Sprite {
-                color: if real {
-                    Color::rgb(1., 1., 1.)
-                } else {
-                    Color::rgb(0.8, 0.8, 1.)
+) -> Entity {
+    commands
+        .spawn((
+            SpriteSheetBundle {
+                texture: textures.board.clone(),
+                atlas: TextureAtlas {
+                    index: summon_type.sprite_idx(),
+                    layout: textures.board_layout.clone(),
                 },
+                sprite: Sprite {
+                    color: if real {
+                        Color::rgb(1., 1., 1.)
+                    } else {
+                        Color::rgb(0.8, 0.8, 1.)
+                    },
+                    ..Default::default()
+                },
+                transform: Transform::from_translation(
+                    tile_position_to_translation(x as i32, y as i32).extend(1.),
+                ),
                 ..Default::default()
             },
-            transform: Transform::from_translation(
-                tile_position_to_translation(x as i32, y as i32).extend(1.),
-            ),
-            ..Default::default()
-        },
-        Summon {
-            summon_type,
-            time: 0.0,
-            x,
-            y,
-        },
-    ));
+            Summon {
+                summon_type,
+                time: 0.0,
+                x,
+                y,
+            },
+        ))
+        .id()
 }

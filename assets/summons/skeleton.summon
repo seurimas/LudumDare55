@@ -1,5 +1,15 @@
 SummonType (
     summon_name: "Skeleton",
     sprite_idx: 2,
+    health: 10,
     mana_cost: 1,
+    stamina: 10,
+    stamina_regen: 10,
+    attacks: [
+        Attack (stamina_cost: 1, damage: 1, range: 1),
+    ],
+    movements: [
+        Movement (stamina_cost: 5, tiles: 1),
+    ],
+    brain: "fighter",
 )

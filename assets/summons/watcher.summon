@@ -1,5 +1,15 @@
 SummonType (
     summon_name: "Watcher",
     sprite_idx: 4,
+    health: 10,
     mana_cost: 1,
+    stamina: 10,
+    stamina_regen: 10,
+    attacks: [
+        Attack (stamina_cost: 10, damage: 1, range: 5),
+    ],
+    movements: [
+        Movement (stamina_cost: 1, tiles: 1),
+    ],
+    brain: "fighter",
 )

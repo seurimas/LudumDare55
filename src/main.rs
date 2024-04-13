@@ -9,6 +9,7 @@ use LudumDare55::GamePlugin;
 
 mod battle;
 mod board;
+mod bt;
 mod loading;
 mod menu;
 mod prelude;
