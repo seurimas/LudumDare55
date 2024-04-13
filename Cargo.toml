@@ -5,7 +5,8 @@ edition = "2021"
 
 
 [dependencies]
-bevy = "0.13"
+bevy = { version = "0.13", features = ["file_watcher"] }
+bevy_ecss = { version = "0.7", path = "../bevy_ecss" }
 rand = "0.8"
 bevy_asset_loader = { version = "0.20", features = ["2d"] }
 bevy_common_assets = { version = "0.10", features = ["ron"] }

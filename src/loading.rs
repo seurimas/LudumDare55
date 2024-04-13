@@ -11,6 +11,7 @@ impl Plugin for LoadingPlugin {
             LoadingState::new(GameState::Loading)
                 .continue_to_state(GameState::Menu)
                 .load_collection::<AudioAssets>()
+                .load_collection::<StyleAssets>()
                 .load_collection::<TextureAssets>()
                 .load_collection::<SummonsAssets>()
                 .load_collection::<BrainAssets>(),
@@ -27,6 +28,14 @@ impl Plugin for LoadingPlugin {
 
 #[derive(AssetCollection, Resource)]
 pub struct AudioAssets {}
+
+#[derive(AssetCollection, Resource)]
+pub struct StyleAssets {
+    #[asset(path = "sheets/loot.css")]
+    pub loot: Handle<StyleSheetAsset>,
+    #[asset(path = "sheets/main_menu.css")]
+    pub main_menu: Handle<StyleSheetAsset>,
+}
 
 #[derive(AssetCollection, Resource)]
 pub struct TextureAssets {

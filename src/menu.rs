@@ -8,7 +8,7 @@ impl Plugin for MenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Menu), setup_menu)
             .add_systems(Update, click_play_button.run_if(in_state(GameState::Menu)))
-            .add_systems(OnExit(GameState::Menu), cleanup_menu);
+            .add_systems(OnExit(GameState::Menu), hide_menu);
     }
 }
 
@@ -30,22 +30,14 @@ impl Default for ButtonColors {
 #[derive(Component)]
 struct Menu;
 
-fn setup_menu(mut commands: Commands) {
+fn setup_menu(mut commands: Commands, styles: Res<StyleAssets>) {
     info!("menu");
     commands.spawn(Camera2dBundle::default());
     commands
         .spawn((
-            NodeBundle {
-                style: Style {
-                    width: Val::Percent(100.0),
-                    height: Val::Percent(100.0),
-                    flex_direction: FlexDirection::Column,
-                    align_items: AlignItems::Center,
-                    justify_content: JustifyContent::Center,
-                    ..default()
-                },
-                ..default()
-            },
+            NodeBundle { ..default() },
+            StyleSheet::new(styles.main_menu.clone()),
+            Name::new("main_menu"),
             Menu,
         ))
         .with_children(|children| {
@@ -64,6 +56,7 @@ fn setup_menu(mut commands: Commands) {
                         ..Default::default()
                     },
                     button_colors,
+                    Name::new("main_menu__play"),
                     ChangeState(GameState::Summoning),
                 ))
                 .with_children(|parent| {
@@ -94,44 +87,6 @@ fn setup_menu(mut commands: Commands) {
             Menu,
         ))
         .with_children(|children| {
-            // children
-            //     .spawn((
-            //         ButtonBundle {
-            //             style: Style {
-            //                 width: Val::Px(170.0),
-            //                 height: Val::Px(50.0),
-            //                 justify_content: JustifyContent::SpaceAround,
-            //                 align_items: AlignItems::Center,
-            //                 padding: UiRect::all(Val::Px(5.)),
-            //                 ..Default::default()
-            //             },
-            //             background_color: Color::NONE.into(),
-            //             ..Default::default()
-            //         },
-            //         ButtonColors {
-            //             normal: Color::NONE,
-            //             ..default()
-            //         },
-            //         OpenLink("https://bevyengine.org"),
-            //     ))
-            //     .with_children(|parent| {
-            //         parent.spawn(TextBundle::from_section(
-            //             "Made with Bevy",
-            //             TextStyle {
-            //                 font_size: 15.0,
-            //                 color: Color::rgb(0.9, 0.9, 0.9),
-            //                 ..default()
-            //             },
-            //         ));
-            //         parent.spawn(ImageBundle {
-            //             image: textures.bevy.clone().into(),
-            //             style: Style {
-            //                 width: Val::Px(32.),
-            //                 ..default()
-            //             },
-            //             ..default()
-            //         });
-            //     });
             children
                 .spawn((
                     ButtonBundle {
@@ -150,6 +105,7 @@ fn setup_menu(mut commands: Commands) {
                         normal: Color::NONE,
                         hovered: Color::rgb(0.25, 0.25, 0.25),
                     },
+                    Name::new("main_menu__open_source"),
                     OpenLink("https://github.com/NiklasEi/bevy_game_template"),
                 ))
                 .with_children(|parent| {
@@ -161,14 +117,6 @@ fn setup_menu(mut commands: Commands) {
                             ..default()
                         },
                     ));
-                    // parent.spawn(ImageBundle {
-                    //     image: textures.github.clone().into(),
-                    //     style: Style {
-                    //         width: Val::Px(32.),
-                    //         ..default()
-                    //     },
-                    //     ..default()
-                    // });
                 });
         });
 }
@@ -209,8 +157,12 @@ fn click_play_button(
     }
 }
 
-fn cleanup_menu(mut commands: Commands, menu: Query<Entity, With<Menu>>) {
-    for entity in menu.iter() {
-        commands.entity(entity).despawn_recursive();
+fn hide_menu(world: &mut World) {
+    let mut query = world
+        .query_filtered::<Entity, With<Menu>>()
+        .iter(world)
+        .collect::<Vec<_>>();
+    for entity in query.drain(..) {
+        despawn_with_children_recursive(world, entity);
     }
 }
