@@ -1,5 +1,3 @@
-use bevy::utils::HashMap;
-
 use crate::prelude::*;
 
 pub struct SummonsPlugin;
@@ -7,10 +5,15 @@ pub struct SummonsPlugin;
 impl Plugin for SummonsPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<SummonedMinions>()
-            .add_systems(OnEnter(GameState::Playing), setup_summons)
+            .add_systems(OnEnter(GameState::Summoning), setup_summons)
             .add_systems(
                 Update,
-                (place_summon, animate_summons, remove_summon).run_if(in_state(GameState::Playing)),
+                (place_summon, animate_summons, remove_summon)
+                    .run_if(in_state(GameState::Summoning)),
+            )
+            .add_systems(
+                Update,
+                animate_summons.run_if(in_state(GameState::Battling)),
             );
     }
 }
@@ -29,6 +32,20 @@ pub struct SummonType {
 }
 
 impl SummonType {
+    pub fn debug() -> Self {
+        Self {
+            summon_name: "Debug".to_string(),
+            sprite_idx: 7,
+            mana_cost: 0,
+            health: 1,
+            stamina: 1,
+            stamina_regen: 1,
+            attacks: vec![Attack::debug()],
+            movements: vec![Movement::debug()],
+            brain: "fighter".to_string(),
+        }
+    }
+
     pub fn name(&self) -> &str {
         &self.summon_name
     }
@@ -51,21 +68,6 @@ impl Into<CharacterStats> for SummonType {
             attacks: self.attacks,
             movements: self.movements,
         }
-    }
-}
-
-#[derive(Resource, Default)]
-pub struct KnownSummons {
-    summons: HashMap<String, SummonType>,
-}
-
-impl KnownSummons {
-    pub fn get(&self, name: &String) -> SummonType {
-        self.summons[name].clone()
-    }
-
-    pub fn length(&self) -> usize {
-        self.summons.len()
     }
 }
 
@@ -136,12 +138,20 @@ pub fn setup_summons(
     summon_types: ResMut<Assets<SummonType>>,
     summons_assets: Res<SummonsAssets>,
 ) {
-    commands.insert_resource(KnownSummons {
-        summons: summon_types
-            .iter()
-            .map(|(handle, summon)| (summon.summon_name.clone(), summon.clone()))
-            .collect(),
-    });
+    commands.insert_resource(KnownSummons::new(vec![
+        summon_types
+            .get(summons_assets.skeleton.clone())
+            .unwrap()
+            .clone(),
+        summon_types
+            .get(summons_assets.angel.clone())
+            .unwrap()
+            .clone(),
+        summon_types
+            .get(summons_assets.watcher.clone())
+            .unwrap()
+            .clone(),
+    ]));
 }
 
 pub fn remove_summon(

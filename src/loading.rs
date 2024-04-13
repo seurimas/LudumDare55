@@ -1,5 +1,3 @@
-use bevy::utils::HashMap;
-
 use crate::prelude::*;
 
 pub struct LoadingPlugin;
@@ -37,6 +35,10 @@ pub struct TextureAssets {
     #[asset(image(sampler = nearest))]
     #[asset(path = "Tiles.png")]
     pub board: Handle<Image>,
+    #[asset(path = "Summon.png")]
+    pub summon: Handle<Image>,
+    #[asset(path = "ScrollBack.png")]
+    pub scroll_back: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]

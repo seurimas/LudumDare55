@@ -14,6 +14,7 @@ mod loading;
 mod menu;
 mod prelude;
 mod state;
+mod summoner;
 mod summons;
 
 use crate::prelude::*;
@@ -28,7 +29,7 @@ fn main() {
                         canvas: Some("#bevy".to_owned()),
                         prevent_default_event_handling: false,
                         resizable: false,
-                        resolution: WindowResolution::new(948., 533.),
+                        resolution: WindowResolution::new(WINDOW_SIZE.0, WINDOW_SIZE.1),
                         ..default()
                     }),
                     ..Default::default()

@@ -35,6 +35,27 @@ pub fn prune_turn_order(
     });
 }
 
+pub fn end_battle(
+    mut next_state: ResMut<NextState<GameState>>,
+    fighters: Query<(Entity, &Faction, &Summon, &CharacterStats)>,
+) {
+    let mut player_units = 0;
+    let mut enemy_units = 0;
+    for (_entity, faction, _summon, stats) in fighters.iter() {
+        match faction {
+            Faction::Player => {
+                player_units += 1;
+            }
+            Faction::Enemy => {
+                enemy_units += 1;
+            }
+        }
+    }
+    if player_units == 0 || enemy_units == 0 {
+        next_state.0 = Some(GameState::Looting);
+    }
+}
+
 pub fn run_battle(
     mut ticker: Local<f32>,
     battle_speed: Res<BattleSpeed>,

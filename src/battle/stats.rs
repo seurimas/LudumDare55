@@ -7,10 +7,29 @@ pub struct Attack {
     pub stamina_cost: i32,
 }
 
+impl Attack {
+    pub fn debug() -> Self {
+        Self {
+            damage: 1,
+            range: 100,
+            stamina_cost: 1,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct Movement {
     pub stamina_cost: i32,
     pub tiles: i32,
+}
+
+impl Movement {
+    pub fn debug() -> Self {
+        Self {
+            stamina_cost: 1,
+            tiles: 1,
+        }
+    }
 }
 
 impl Movement {

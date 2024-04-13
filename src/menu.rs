@@ -64,7 +64,7 @@ fn setup_menu(mut commands: Commands) {
                         ..Default::default()
                     },
                     button_colors,
-                    ChangeState(GameState::Playing),
+                    ChangeState(GameState::Summoning),
                 ))
                 .with_children(|parent| {
                     parent.spawn(TextBundle::from_section(
