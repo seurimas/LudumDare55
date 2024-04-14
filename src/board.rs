@@ -61,10 +61,21 @@ fn setup(
     let (_, mut camera_transform) = cameras.single_mut();
     camera_transform.translation = Vec3::new(TILE_SIZE * 4., TILE_SIZE * 4., 10.);
     let tiles = vec![
-        0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0,
-        1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0,
-        1, 0, 1, 0,
+        0, 1, 0, 1, 0, 1, 0, 1, // 0
+        1, 0, 1, 0, 1, 0, 1, 0, // 1
+        0, 1, 0, 1, 0, 1, 0, 1, // 2
+        17, 16, 17, 16, 17, 16, 17, 16, // 3
+        16, 17, 16, 17, 16, 17, 16, 17, // 4
+        17, 16, 17, 16, 17, 16, 17, 16, // 5
+        16, 17, 16, 17, 16, 17, 16, 17, // 6
+        17, 16, 17, 16, 17, 16, 17, 16, // 7
     ];
+    commands.spawn(SpriteBundle {
+        texture: asset.background.clone(),
+        transform: Transform::from_scale(Vec3::new(2., 2., 1.))
+            .with_translation(Vec3::new(0., 0., -1.)),
+        ..Default::default()
+    });
     for (i, tile) in tiles.iter().enumerate() {
         let x = i % 8;
         let y = i / 8;
@@ -171,7 +182,7 @@ fn mouse_over_tiles(
                         sprite.color = Color::rgb(0.5, 0.5, 0.5);
                         board_mouse_state.pickable_tile = Some((tile.x, tile.y));
                     } else {
-                        sprite.color = Color::rgb(0.8, 0.8, 0.8);
+                        sprite.color = Color::rgb(0.95, 0.95, 0.95);
                     }
                 } else {
                     sprite.color = Color::WHITE;

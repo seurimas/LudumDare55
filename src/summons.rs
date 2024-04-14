@@ -24,6 +24,18 @@ impl Tribe {
             Tribe::Other => "Mysterious",
         }
     }
+
+    pub fn sting(&self) -> &str {
+        match self {
+            Tribe::Angel => "angel_summon_sting",
+            Tribe::Undead => "undead_summon_sting",
+            Tribe::Fairy => "fairy_summon_sting",
+            Tribe::Construct => "construct_summon_sting",
+            Tribe::Elemental => "elemental_summon_sting",
+            Tribe::Demon => "demon_summon_sting",
+            Tribe::Other => "enemy_summon_sting",
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Asset, TypePath)]
@@ -39,7 +51,7 @@ pub struct SummonType {
     #[serde(default)]
     tagline: String,
     #[serde(default)]
-    tribe: Tribe,
+    pub tribe: Tribe,
     brain: String,
     prerequisites: (i32, Option<String>),
 }

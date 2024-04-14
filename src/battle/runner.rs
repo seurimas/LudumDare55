@@ -42,6 +42,9 @@ pub fn end_battle(
     mut next_state: ResMut<NextState<GameState>>,
     fighters: Query<(Entity, &Faction, &Summon, &CharacterStats)>,
     damage_text: Query<Entity, With<DamageText>>,
+    mut story: ResMut<Story>,
+    mut story_beat: ResMut<StoryBeat>,
+    sounds: Res<AudioAssets>,
 ) {
     let mut player_units = my_minions.summons();
     let mut enemy_units = enemy_minions.0.summons();
@@ -59,6 +62,21 @@ pub fn end_battle(
         for entity in damage_text.iter() {
             commands.entity(entity).despawn_recursive();
         }
+        let beats = if enemy_units == 0 {
+            commands.spawn(AudioBundle {
+                source: sounds.victory_sting.clone(),
+                ..Default::default()
+            });
+            story.win()
+        } else {
+            commands.spawn(AudioBundle {
+                source: sounds.defeat_sting.clone(),
+                ..Default::default()
+            });
+            story.lose()
+        };
+        story_beat.reset();
+        story_beat.apply(beats);
         next_state.0 = Some(GameState::Looting);
     }
 }
@@ -110,7 +128,7 @@ pub fn run_battle(
             Faction::Enemy => enemy_units.push((summon.x, summon.y)),
         }
     }
-    if player_units.is_empty() || enemy_units.is_empty() {
+    if player_units.is_empty() && enemy_units.is_empty() {
         return;
     }
     let next_turn = turn_order.order.pop().unwrap();
@@ -206,6 +224,7 @@ pub fn animate_battle(
     time: Res<Time>,
     mut summon_query: Query<(&Summon, &mut Transform)>,
     mut attacks: EventReader<AttackEvent>,
+    sounds: Res<AudioAssets>,
 ) {
     let t = time.delta_seconds() / (speed.0 - timer.0).max(0.0001);
     for (summon, mut transform) in summon_query.iter_mut() {
@@ -236,6 +255,10 @@ pub fn animate_battle(
                 },
                 DamageText(0.0),
             ));
+            commands.spawn(AudioBundle {
+                source: sounds.hurt.clone(),
+                ..Default::default()
+            });
         }
         if let Ok((_, mut transform)) = summon_query.get_mut(attack.attacker) {
             transform.translation.y += 8.;

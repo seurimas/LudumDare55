@@ -23,6 +23,13 @@ impl Plugin for GamePlugin {
             .add_plugins(battle::BattlePlugin)
             .add_plugins(summoner::SummonerPlugin)
             .add_plugins(flow::StoryPlugin)
-            .init_state::<GameState>();
+            .init_state::<GameState>()
+            .add_systems(PostUpdate, force_stylesheet_refresh);
+    }
+}
+
+fn force_stylesheet_refresh(mut query: Query<&mut StyleSheet>) {
+    for mut style_sheet in query.iter_mut() {
+        style_sheet.refresh();
     }
 }

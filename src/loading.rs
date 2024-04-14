@@ -31,7 +31,35 @@ impl Plugin for LoadingPlugin {
 // when done loading, they will be inserted as resources (see <https://github.com/NiklasEi/bevy_asset_loader>)
 
 #[derive(AssetCollection, Resource)]
-pub struct AudioAssets {}
+pub struct AudioAssets {
+    #[asset(
+        paths(
+            "audio/angel_summon_sting.wav",
+            "audio/construct_summon_sting.wav",
+            "audio/demon_summon_sting.wav",
+            "audio/elemental_summon_sting.wav",
+            "audio/fairy_summon_sting.wav",
+            "audio/undead_summon_sting.wav",
+            "audio/enemy_summon_sting.wav"
+        ),
+        collection(typed, mapped)
+    )]
+    pub summon_stings: HashMap<FileStem, Handle<AudioSource>>,
+    #[asset(path = "audio/defeat_sting.wav")]
+    pub defeat_sting: Handle<AudioSource>,
+    #[asset(path = "audio/victory_sting.wav")]
+    pub victory_sting: Handle<AudioSource>,
+    #[asset(path = "audio/hurt.wav")]
+    pub hurt: Handle<AudioSource>,
+    #[asset(path = "audio/place.wav")]
+    pub place: Handle<AudioSource>,
+    #[asset(path = "audio/remove.wav")]
+    pub remove: Handle<AudioSource>,
+    #[asset(path = "audio/type.wav")]
+    pub type_char: Handle<AudioSource>,
+    #[asset(path = "audio/error.wav")]
+    pub error: Handle<AudioSource>,
+}
 
 #[derive(AssetCollection, Resource)]
 pub struct StyleAssets {
@@ -43,6 +71,8 @@ pub struct StyleAssets {
     pub summon_button: Handle<StyleSheetAsset>,
     #[asset(path = "sheets/summon_scroll.css")]
     pub summon_scroll: Handle<StyleSheetAsset>,
+    #[asset(path = "sheets/narration.css")]
+    pub narration: Handle<StyleSheetAsset>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -58,6 +88,10 @@ pub struct TextureAssets {
     pub scroll_back: Handle<Image>,
     #[asset(path = "ScrollSide.png")]
     pub scroll_side: Handle<Image>,
+    #[asset(path = "Narration.png")]
+    pub narration: Handle<Image>,
+    #[asset(path = "Background.png")]
+    pub background: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]

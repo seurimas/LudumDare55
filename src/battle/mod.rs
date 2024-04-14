@@ -25,14 +25,10 @@ impl Plugin for BattlePlugin {
             )
             .add_systems(
                 Update,
-                (
-                    run_battle,
-                    prune_turn_order,
-                    prune_dead_entities,
-                    end_battle,
-                )
+                (run_battle, prune_turn_order, prune_dead_entities)
                     .run_if(in_state(GameState::Battling)),
             )
+            .add_systems(PostUpdate, end_battle.run_if(in_state(GameState::Battling)))
             .add_systems(OnEnter(GameState::Looting), setup_loot_screen)
             .add_systems(
                 Update,

@@ -51,16 +51,6 @@ impl SummonedMinions {
         Some((x, y, summon_name))
     }
 
-    pub fn drain_summons(&mut self) -> Vec<(usize, usize, String)> {
-        let mut drained = Vec::new();
-        for ((x, y), summon_name) in self.spawn_locations.iter() {
-            drained.push((*x, *y, summon_name.clone()));
-        }
-        self.spawn_locations.clear();
-        self.mana_locations.clear();
-        drained
-    }
-
     pub fn mana(&self) -> i32 {
         self.mana
     }
@@ -82,12 +72,17 @@ pub fn remove_summon(
     board_mouse_state: Res<BoardMouseState>,
     mut summoned_minions: ResMut<SummonedMinions>,
     summoned_entities: Query<(Entity, &Summon)>,
+    sounds: Res<AudioAssets>,
 ) {
-    if let Some((x, y)) = board_mouse_state.hovered_tile {
+    if let Some((x, y)) = board_mouse_state.pickable_tile {
         if keyboard_input.just_pressed(KeyCode::Delete)
             || keyboard_input.just_pressed(KeyCode::Backspace)
         {
             if summoned_minions.remove_summon(x, y) {
+                commands.spawn(AudioBundle {
+                    source: sounds.remove.clone(),
+                    ..Default::default()
+                });
                 for (entity, summon) in summoned_entities.iter() {
                     if summon.x == x && summon.y == y {
                         commands.entity(entity).despawn_recursive();
@@ -107,8 +102,9 @@ pub fn place_summon(
     known_summons: Res<KnownSummons>,
     mut summoned: ResMut<SummonedMinions>,
     mana: Res<mana::Mana>,
+    sounds: Res<AudioAssets>,
 ) {
-    if let Some((x, y)) = board_mouse_state.hovered_tile {
+    if let Some((x, y)) = board_mouse_state.pickable_tile {
         if summoned.has_spawn_location(x, y) {
             return;
         }
@@ -121,6 +117,10 @@ pub fn place_summon(
                     let summon = known_summons.get_active().unwrap();
                     if mana.mana_left() >= summon.mana_cost() {
                         spawn_summon(&mut commands, &textures, summon.clone(), x, y, false);
+                        commands.spawn(AudioBundle {
+                            source: sounds.place.clone(),
+                            ..Default::default()
+                        });
                         summoned.add_summon(summon, x, y);
                     }
                 }
@@ -130,6 +130,10 @@ pub fn place_summon(
             if let Some(summon) = known_summons.get_active() {
                 if mana.mana_left() >= summon.mana_cost() {
                     spawn_summon(&mut commands, &textures, summon.clone(), x, y, false);
+                    commands.spawn(AudioBundle {
+                        source: sounds.place.clone(),
+                        ..Default::default()
+                    });
                     summoned.add_summon(summon, x, y);
                 }
             }

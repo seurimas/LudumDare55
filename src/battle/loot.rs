@@ -19,8 +19,12 @@ pub fn setup_loot_screen(
     summons_assets: Res<SummonsAssets>,
     known_summons: Res<KnownSummons>,
     assets_summon_types: Res<Assets<SummonType>>,
-    mana: Res<Mana>,
+    mut mana: ResMut<Mana>,
+    story_beat: Res<StoryBeat>,
 ) {
+    if story_beat.mana_gained > 0 {
+        mana.max_mana += story_beat.mana_gained;
+    }
     let mut available_summons = summons_assets
         .player_summons
         .values()
@@ -55,14 +59,31 @@ pub fn setup_loot_screen(
         .with_children(|parent| {
             parent.spawn((
                 TextBundle {
-                    text: Text::from_sections(vec![TextSection {
-                        value: "Select a new summon!".to_string(),
-                        style: TextStyle {
-                            font: Default::default(),
-                            font_size: 20.0,
-                            color: Color::WHITE,
+                    text: Text::from_sections(vec![
+                        TextSection {
+                            value: "Select a new summon!\n".to_string(),
+                            style: TextStyle {
+                                font: Default::default(),
+                                font_size: 20.0,
+                                color: Color::WHITE,
+                            },
                         },
-                    }]),
+                        TextSection {
+                            value: if story_beat.mana_gained > 0 {
+                                format!(
+                                    "You gained {} mana!\nYour new max is: {}",
+                                    story_beat.mana_gained, mana.max_mana
+                                )
+                            } else {
+                                format!("Your max mana is: {}", mana.max_mana)
+                            },
+                            style: TextStyle {
+                                font: Default::default(),
+                                font_size: 20.0,
+                                color: Color::BLUE,
+                            },
+                        },
+                    ]),
                     ..Default::default()
                 },
                 Class::new("loot__text"),
