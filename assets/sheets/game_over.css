@@ -19,6 +19,7 @@
 .game_over {
     position-type: absolute;
     display: flex;
+    justify-content: space-around;
     width: 240px;
     height: 80px;
     top: 16px;
@@ -49,4 +50,11 @@
 
 .share_army text {
     text-align: center;
+}
+
+.restart {
+    background-color: #f0f;
+    border-color: black;
+    border: 3px;
+    align-self: center;
 }

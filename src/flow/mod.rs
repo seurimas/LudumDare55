@@ -32,11 +32,11 @@ impl Plugin for StoryPlugin {
             )
             .add_systems(
                 Update,
-                animate_game_over_defeat.run_if(in_state(GameState::Defeat)),
+                (animate_game_over_defeat, restart_on_click).run_if(in_state(GameState::Defeat)),
             )
             .add_systems(
                 Update,
-                animate_game_over_victory.run_if(in_state(GameState::Victory)),
+                (animate_game_over_victory, restart_on_click).run_if(in_state(GameState::Victory)),
             );
     }
 }

@@ -164,6 +164,25 @@ pub fn start_story(
         .clone();
 }
 
+pub fn restart_on_click(
+    interactions: Query<&Interaction, (Changed<Interaction>, With<RestartButton>)>,
+    mut next_state: ResMut<NextState<GameState>>,
+    mut story_beat: ResMut<StoryBeat>,
+    mut mana: ResMut<Mana>,
+    mut known_summons: ResMut<KnownSummons>,
+    mut save_data: ResMut<SaveData>,
+) {
+    for interaction in interactions.iter() {
+        if *interaction == Interaction::Pressed {
+            next_state.set(GameState::Menu);
+            *story_beat = StoryBeat::default();
+            *mana = Mana::default();
+            *known_summons = KnownSummons::default();
+            save_data.armies.clear();
+        }
+    }
+}
+
 pub fn queue_next_wave(
     mut commands: Commands,
     mut story: ResMut<Story>,

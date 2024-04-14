@@ -83,6 +83,33 @@ pub fn spawn_overlay(
             if victory {
                 add_save_button(parent);
             }
+            add_restart_button(parent);
+        });
+}
+
+#[derive(Component)]
+pub struct RestartButton;
+
+pub fn add_restart_button(parent: &mut ChildBuilder) {
+    // Evoke darkness.
+    parent
+        .spawn((
+            ButtonBundle::default(),
+            RestartButton,
+            Class::new("restart"),
+        ))
+        .with_children(|parent| {
+            parent.spawn((TextBundle {
+                text: Text::from_section(
+                    "Restart".to_string(),
+                    TextStyle {
+                        font: Default::default(),
+                        font_size: 32.,
+                        color: Color::BLACK,
+                    },
+                ),
+                ..default()
+            },));
         });
 }
 

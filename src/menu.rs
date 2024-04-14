@@ -35,7 +35,11 @@ fn setup_menu(
     styles: Res<StyleAssets>,
     textures: Res<TextureAssets>,
     sounds: Res<AudioAssets>,
+    query: Query<Entity, Without<Window>>,
 ) {
+    for entity in query.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
     commands.spawn((
         AudioBundle {
             source: sounds.welcome.clone(),
@@ -110,12 +114,19 @@ fn click_play_button(
         ),
         (Changed<Interaction>, With<Button>),
     >,
+    story_asset: Res<Assets<Story>>,
+    mut story: ResMut<Story>,
+    summon_assets: Res<SummonsAssets>,
 ) {
     for (interaction, mut color, button_colors, change_state, open_link) in &mut interaction_query {
         match *interaction {
             Interaction::Pressed => {
                 if let Some(state) = change_state {
                     next_state.set(state.0.clone());
+                    *story = story_asset
+                        .get(summon_assets.story_teller.clone())
+                        .unwrap()
+                        .clone();
                 }
             }
             Interaction::Hovered => {
