@@ -1,0 +1,19 @@
+#![enable(implicit_some)]
+SummonType (
+    summon_name: "Vampire",
+    sprite_idx: 26,
+    health: 10,
+    mana_cost: 5,
+    stamina: 10,
+    stamina_regen: 10,
+    attacks: [
+        Attack (stamina_cost: 10, damage: 5, range: 1),
+    ],
+    movements: [
+        Movement (stamina_cost: 10, tiles: 2),
+    ],
+    tagline: "A terrifying creature of the night, capable of eviscerating its foes.",
+    tribe: Undead,
+    brain: "fighter",
+    prerequisites: (5, "Ghost"),
+)

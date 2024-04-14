@@ -12,6 +12,8 @@ pub struct LootButton(pub SummonType);
 #[derive(Component)]
 pub struct LootDescriptor(pub Option<SummonType>);
 
+const SUMMONS_PER_LOOT: usize = 6;
+
 pub fn setup_loot_screen(
     mut commands: Commands,
     styles: Res<StyleAssets>,
@@ -42,7 +44,7 @@ pub fn setup_loot_screen(
         })
         .collect::<Vec<_>>();
     let mut pickable_summons = vec![];
-    for _ in 0..3 {
+    for _ in 0..SUMMONS_PER_LOOT {
         if !available_summons.is_empty() {
             let idx = rand::thread_rng().gen_range(0..available_summons.len());
             pickable_summons.push(available_summons.remove(idx));

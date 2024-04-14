@@ -15,7 +15,11 @@ impl Plugin for BoardPlugin {
             )
             .add_systems(
                 Update,
-                move_board_to_center.run_if(in_state(GameState::Battling)),
+                (
+                    move_board_to_center.run_if(in_state(GameState::Victory)),
+                    move_board_to_center.run_if(in_state(GameState::Defeat)),
+                    move_board_to_center.run_if(in_state(GameState::Battling)),
+                ),
             )
             .add_systems(
                 OnEnter(GameState::Summoning),
@@ -33,10 +37,14 @@ pub struct Tile {
     pub x: usize,
     pub y: usize,
     pub can_place: bool,
+    pub sprite: usize,
 }
 
 #[derive(Component)]
-pub struct BorderTile;
+pub struct BorderTile {
+    pub x: usize,
+    pub sprite: usize,
+}
 
 #[derive(Resource, Default)]
 pub struct BoardMouseState {
@@ -95,6 +103,7 @@ fn setup(
                 x,
                 y,
                 can_place: y <= 2,
+                sprite: *tile,
             },
         ));
     }
@@ -112,7 +121,7 @@ fn setup(
                 ),
                 ..Default::default()
             },
-            BorderTile,
+            BorderTile { x, sprite: *tile },
         ));
     }
 }

@@ -1,4 +1,6 @@
-use crate::prelude::*;
+use crate::{prelude::*, summons::OverheadText};
+
+use super::DeathCharacterBrain;
 
 #[derive(Resource, Default)]
 pub struct TurnOrder {
@@ -14,25 +16,17 @@ impl Default for BattleSpeed {
     }
 }
 
-pub fn prune_dead_entities(mut commands: Commands, query: Query<(Entity, &CharacterStats)>) {
-    for (entity, stats) in query.iter() {
-        if stats.health <= 0 {
-            commands.entity(entity).despawn_recursive();
-        }
+pub fn modify_battle_speed(keys: Res<ButtonInput<KeyCode>>, mut battle_speed: ResMut<BattleSpeed>) {
+    if keys.pressed(KeyCode::Space) {
+        battle_speed.0 = 1.;
+    } else if keys.pressed(KeyCode::ShiftLeft)
+        || keys.pressed(KeyCode::ShiftRight)
+        || keys.pressed(KeyCode::Enter)
+    {
+        battle_speed.0 = 0.1;
+    } else {
+        battle_speed.0 = 0.25;
     }
-}
-
-pub fn prune_turn_order(
-    mut turn_order: ResMut<TurnOrder>,
-    query: Query<(Entity, &CharacterStats)>,
-) {
-    turn_order.order.retain(|entity| {
-        if let Ok((_entity, stats)) = query.get(*entity) {
-            stats.health > 0
-        } else {
-            false
-        }
-    });
 }
 
 pub fn end_battle(
@@ -103,6 +97,7 @@ pub fn run_battle(
         &mut Summon,
         &mut CharacterStats,
         &mut CharacterBrain,
+        &mut DeathCharacterBrain,
     )>,
     mut attack_events: EventWriter<AttackEvent>,
 ) {
@@ -111,7 +106,7 @@ pub fn run_battle(
         return;
     }
     if turn_order.order.is_empty() {
-        for (entity, _, _, mut stats, _) in fighters.iter_mut() {
+        for (entity, _, _, mut stats, _, _death) in fighters.iter_mut() {
             turn_order.order.push(entity);
             stats.stamina += stats.stamina_regen;
         }
@@ -122,7 +117,7 @@ pub fn run_battle(
     ticker.0 = 0.;
     let mut player_units = vec![];
     let mut enemy_units = vec![];
-    for (_entity, faction, summon, _stats, _brain) in fighters.iter() {
+    for (_entity, faction, summon, _stats, _brain, _death) in fighters.iter() {
         match faction {
             Faction::Player => player_units.push((summon.x, summon.y)),
             Faction::Enemy => enemy_units.push((summon.x, summon.y)),
@@ -133,8 +128,11 @@ pub fn run_battle(
     }
     let next_turn = turn_order.order.pop().unwrap();
     let mut attacks = vec![];
-    if let Ok((entity, faction, mut summon, mut stats, mut brain)) = fighters.get_mut(next_turn) {
-        if stats.health == 0 {
+    let mut auras = vec![];
+    if let Ok((entity, faction, mut summon, mut stats, mut brain, mut death_brain)) =
+        fighters.get_mut(next_turn)
+    {
+        if stats.health <= 0 {
             commands.entity(entity).despawn_recursive();
         }
         let model = BehaviorModel {
@@ -161,34 +159,47 @@ pub fn run_battle(
             actions: vec![],
             picked_location: None,
             picked_index: None,
+            picked_aura: None,
         };
-        brain.tree.resume_with(&model, &mut controller);
+        if stats.health <= 0 {
+            info!("Death brain!");
+            death_brain.0.tree.resume_with(&model, &mut controller);
+        } else {
+            brain.tree.resume_with(&model, &mut controller);
+        }
         for action in controller.actions {
             match action {
                 Action::Move { movement, target } => {
-                    let next_location =
-                        movement.next_location(summon.x, summon.y, target.0, target.1);
-                    if !model.location_occupied(next_location.0, next_location.1) {
-                        summon.x = next_location.0;
-                        summon.y = next_location.1;
-                        stats.stamina -= movement.stamina_cost;
+                    for _ in 0..(movement.tiles) {
+                        let next_location =
+                            movement.next_location(summon.x, summon.y, target.0, target.1);
+                        if !model.location_occupied(next_location.0, next_location.1) {
+                            summon.x = next_location.0;
+                            summon.y = next_location.1;
+                            stats.stamina -= movement.stamina_cost;
+                        }
                     }
                 }
                 Action::Attack { attack, target } => {
                     attacks.push((entity, attack, target));
                 }
+                Action::Aura { effect, target } => {
+                    auras.push((effect, target));
+                }
             }
         }
     }
     for (entity, attack, target) in attacks {
-        if let Ok((_entity, _faction, _summon, mut stats, _brain)) = fighters.get_mut(entity) {
+        if let Ok((_entity, _faction, _summon, mut stats, _brain, _death)) =
+            fighters.get_mut(entity)
+        {
             if stats.stamina >= attack.stamina_cost {
                 stats.stamina -= attack.stamina_cost;
             }
         }
-        if let Some((target, _faction, _summon, mut stats, _brain)) = fighters
+        if let Some((target, _faction, _summon, mut stats, _brain, _death)) = fighters
             .iter_mut()
-            .find(|(_, _, summon, _, _)| summon.x == target.0 && summon.y == target.1)
+            .find(|(_, _, summon, _, _, _)| summon.x == target.0 && summon.y == target.1)
         {
             attack_events.send(AttackEvent {
                 attacker: entity,
@@ -196,6 +207,14 @@ pub fn run_battle(
                 damage: attack.damage,
             });
             stats.health -= attack.damage;
+        }
+    }
+    for (effect, target) in auras {
+        if let Some((target, _faction, _summon, mut stats, _brain, _death)) = fighters
+            .iter_mut()
+            .find(|(_, _, summon, _, _, _)| summon.x == target.0 && summon.y == target.1)
+        {
+            stats.apply_aura(effect);
         }
     }
 }
@@ -226,7 +245,7 @@ pub fn animate_battle(
     mut attacks: EventReader<AttackEvent>,
     sounds: Res<AudioAssets>,
 ) {
-    let t = time.delta_seconds() / (speed.0 - timer.0).max(0.0001);
+    let t = time.delta_seconds() / (speed.0 - timer.0).max(0.0001).min(1.);
     for (summon, mut transform) in summon_query.iter_mut() {
         let target = tile_position_to_translation(summon.x as i32, summon.y as i32);
         let translation = transform.translation.lerp(target.extend(1.), t);
@@ -262,6 +281,22 @@ pub fn animate_battle(
         }
         if let Ok((_, mut transform)) = summon_query.get_mut(attack.attacker) {
             transform.translation.y += 8.;
+        }
+    }
+}
+
+pub fn show_auras_overhead(
+    stats: Query<(Entity, &CharacterStats, &Summon)>,
+    mut overhead_query: Query<(&Parent, &mut Text), With<OverheadText>>,
+) {
+    for (parent, mut text) in overhead_query.iter_mut() {
+        if let Ok((entity, stats, _summon)) = stats.get(parent.get()) {
+            text.sections[0].value = stats
+                .applied_auras
+                .iter()
+                .fold("".to_string(), |acc, aura| {
+                    format!("{}\n{}", acc, aura.name())
+                });
         }
     }
 }

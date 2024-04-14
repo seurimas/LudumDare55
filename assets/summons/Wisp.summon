@@ -1,0 +1,23 @@
+#![enable(implicit_some)]
+SummonType (
+    summon_name: "Wisp",
+    sprite_idx: 6,
+    health: 1,
+    mana_cost: 1,
+    stamina: 10,
+    stamina_regen: 10,
+    attacks: [
+        Attack (stamina_cost: 0, damage: 1, range: 1),
+    ],
+    movements: [
+        Movement (stamina_cost: 10, tiles: 2),
+    ],
+    auras: [
+        Speed("Wind", 1, [Angel, Fairy]),
+    ],
+    tagline: "Fundamental air. Gives speed to allies on death.",
+    tribe: Elemental,
+    brain: "fighter",
+    death_brain: "elemental_buff_death",
+    prerequisites: (3, None),
+)

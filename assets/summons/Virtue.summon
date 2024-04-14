@@ -1,0 +1,19 @@
+#![enable(implicit_some)]
+SummonType (
+    summon_name: "Virtue",
+    sprite_idx: 19,
+    health: 10,
+    mana_cost: 2,
+    stamina: 10,
+    stamina_regen: 10,
+    attacks: [
+        Attack (stamina_cost: 10, damage: 3, range: 4),
+    ],
+    movements: [
+        Movement (stamina_cost: 10, tiles: 2),
+    ],
+    tagline: "A power angel who can deliver great damage at range.",
+    tribe: Angel,
+    brain: "evading",
+    prerequisites: (1, "Guardian"),
+)

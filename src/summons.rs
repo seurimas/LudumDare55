@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{battle::AuraEffect, prelude::*};
 
 #[derive(Serialize, Deserialize, Default, Clone, Debug, PartialEq, Eq)]
 pub enum Tribe {
@@ -49,10 +49,14 @@ pub struct SummonType {
     attacks: Vec<Attack>,
     movements: Vec<Movement>,
     #[serde(default)]
+    auras: Vec<AuraEffect>,
+    #[serde(default)]
     tagline: String,
     #[serde(default)]
     pub tribe: Tribe,
     brain: String,
+    #[serde(default)]
+    death_brain: String,
     prerequisites: (i32, Option<String>),
 }
 
@@ -67,9 +71,11 @@ impl SummonType {
             stamina_regen: 1,
             attacks: vec![Attack::debug()],
             movements: vec![Movement::debug()],
+            auras: vec![],
             tagline: "You shouldn't see this".to_string(),
             tribe: Tribe::Other,
             brain: "fighter".to_string(),
+            death_brain: "".to_string(),
             prerequisites: (0, None),
         }
     }
@@ -80,6 +86,13 @@ impl SummonType {
 
     pub fn get_brain(&self, brain_assets: &BrainAssets) -> Option<Handle<CharacterBrainDef>> {
         brain_assets.brains.get(&*self.brain.as_str()).cloned()
+    }
+
+    pub fn get_death_brain(&self, brain_assets: &BrainAssets) -> Option<Handle<CharacterBrainDef>> {
+        brain_assets
+            .brains
+            .get(&*self.death_brain.as_str())
+            .cloned()
     }
 
     pub fn sprite_idx(&self) -> usize {
@@ -181,6 +194,9 @@ impl Into<CharacterStats> for SummonType {
             stamina_regen: self.stamina_regen,
             attacks: self.attacks,
             movements: self.movements,
+            tribe: self.tribe,
+            auras: self.auras,
+            applied_auras: vec![],
         }
     }
 }

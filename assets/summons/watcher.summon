@@ -1,3 +1,4 @@
+#![enable(implicit_some)]
 SummonType (
     summon_name: "Watcher",
     sprite_idx: 4,
@@ -11,8 +12,11 @@ SummonType (
     movements: [
         Movement (stamina_cost: 1, tiles: 1),
     ],
-    tagline: "A magical watcher with a ranged attack.",
+    auras: [
+        Range("Watched", 1, [Angel, Undead])
+    ],
+    tagline: "A magical watcher with a ranged attack. Improves the range of nearby Angels and Undead.",
     tribe: Construct,
-    brain: "fighter",
-    prerequisites: (1, None),
+    brain: "construct",
+    prerequisites: (3, None),
 )

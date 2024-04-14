@@ -1,3 +1,4 @@
+#![enable(implicit_some)]
 SummonType (
     summon_name: "Skeleton",
     sprite_idx: 2,

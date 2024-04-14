@@ -59,6 +59,10 @@ pub struct AudioAssets {
     pub type_char: Handle<AudioSource>,
     #[asset(path = "audio/error.wav")]
     pub error: Handle<AudioSource>,
+    #[asset(path = "audio/game_over_victory.wav")]
+    pub game_over_victory: Handle<AudioSource>,
+    #[asset(path = "audio/game_over_defeat.wav")]
+    pub game_over_defeat: Handle<AudioSource>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -73,6 +77,8 @@ pub struct StyleAssets {
     pub summon_scroll: Handle<StyleSheetAsset>,
     #[asset(path = "sheets/narration.css")]
     pub narration: Handle<StyleSheetAsset>,
+    #[asset(path = "sheets/game_over.css")]
+    pub game_over: Handle<StyleSheetAsset>,
 }
 
 #[derive(AssetCollection, Resource)]

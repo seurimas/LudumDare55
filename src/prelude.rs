@@ -1,6 +1,6 @@
 pub use crate::battle::{
-    Action, Attack, BehaviorController, BehaviorModel, CharacterBrain, CharacterBrainDef,
-    CharacterStats, Faction, Movement,
+    Action, Attack, AuraEffect, BehaviorController, BehaviorModel, CharacterBrain,
+    CharacterBrainDef, CharacterStats, Faction, Movement,
 };
 pub use crate::board::BoardMouseState;
 pub use crate::bt::*;
@@ -24,4 +24,11 @@ pub const BOARD_SIZE: f32 = 8.0;
 
 pub fn tile_position_to_translation(x: i32, y: i32) -> Vec2 {
     Vec2::new(x as f32 * TILE_SIZE, y as f32 * TILE_SIZE)
+}
+
+pub fn translation_to_tile_position(translation: Vec2) -> (i32, i32) {
+    (
+        (translation.x / TILE_SIZE).round() as i32,
+        (translation.y / TILE_SIZE).round() as i32,
+    )
 }

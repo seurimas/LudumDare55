@@ -21,13 +21,15 @@ impl Plugin for BattlePlugin {
             .add_event::<AttackEvent>()
             .add_systems(
                 Update,
-                (animate_battle, animate_battle_text).run_if(in_state(GameState::Battling)),
-            )
-            .add_systems(
-                Update,
-                (run_battle, prune_turn_order, prune_dead_entities)
+                (
+                    modify_battle_speed,
+                    animate_battle,
+                    animate_battle_text,
+                    show_auras_overhead,
+                )
                     .run_if(in_state(GameState::Battling)),
             )
+            .add_systems(Update, (run_battle).run_if(in_state(GameState::Battling)))
             .add_systems(PostUpdate, end_battle.run_if(in_state(GameState::Battling)))
             .add_systems(OnEnter(GameState::Looting), setup_loot_screen)
             .add_systems(

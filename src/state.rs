@@ -9,6 +9,9 @@ pub enum GameState {
     Summoning,
     Battling,
     Looting,
+    // Game over animations
+    Defeat,
+    Victory,
     // Here the menu is drawn and waiting for player interaction
     Menu,
 }

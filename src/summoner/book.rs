@@ -83,6 +83,12 @@ impl KnownSummons {
         None
     }
 
+    pub fn get_random(&self) -> Option<SummonType> {
+        let mut rng = rand::thread_rng();
+        let idx = rng.gen_range(0..self.summons.len());
+        self.summons.values().nth(idx).cloned()
+    }
+
     pub fn length(&self) -> usize {
         self.summons.len()
     }

@@ -1,0 +1,19 @@
+#![enable(implicit_some)]
+SummonType (
+    summon_name: "Ghost",
+    sprite_idx: 18,
+    health: 5,
+    mana_cost: 2,
+    stamina: 10,
+    stamina_regen: 10,
+    attacks: [
+        Attack (stamina_cost: 10, damage: 1, range: 4),
+    ],
+    movements: [
+        Movement (stamina_cost: 10, tiles: 2),
+    ],
+    tagline: "An ephemeral ghostly apparition, with a ranged attack.",
+    tribe: Undead,
+    brain: "evading",
+    prerequisites: (1, "Ghoul"),
+)

@@ -1,0 +1,4 @@
+Sequence([
+    User(PickAura),
+    Wrapper(ForAllAllies, [User(RefreshAuraForTarget)]),
+])

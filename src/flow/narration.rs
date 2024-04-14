@@ -130,7 +130,7 @@ pub fn advance_narration(
             _ => {}
         }
     }
-    if keys.just_pressed(KeyCode::Enter) {
+    if keys.just_pressed(KeyCode::Enter) || keys.just_pressed(KeyCode::Space) {
         advance_full = true;
     }
     if advance_full {

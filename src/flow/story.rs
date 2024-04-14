@@ -1,6 +1,6 @@
 use bevy::log::tracing_subscriber::fmt::time;
 
-use crate::prelude::*;
+use crate::{battle::DeathCharacterBrain, prelude::*};
 
 #[derive(Serialize, Deserialize, Default, Resource, Asset, TypePath, Clone)]
 pub struct Story {
@@ -13,7 +13,13 @@ pub struct Story {
 impl Story {
     pub fn win(&mut self) -> Vec<StoryBeatType> {
         let mut winning = if self.winning_beats.is_empty() {
-            vec![]
+            if self.waves.is_empty() {
+                vec![StoryBeatType::GameOver(true)]
+            } else {
+                vec![StoryBeatType::Narration(
+                    "The dark forces were repelled!".to_string(),
+                )]
+            }
         } else {
             self.winning_beats.remove(0)
         };
@@ -25,7 +31,7 @@ impl Story {
 
     pub fn lose(&mut self) -> Vec<StoryBeatType> {
         let mut losing = if self.losing_beats.is_empty() {
-            vec![]
+            vec![StoryBeatType::GameOver(false)]
         } else {
             self.losing_beats.remove(0)
         };
@@ -40,6 +46,8 @@ impl Story {
 pub struct StoryBeat {
     pub mana_gained: i32,
     pub narration: Vec<String>,
+    pub victory: bool,
+    pub defeat: bool,
 }
 
 impl Default for StoryBeat {
@@ -47,17 +55,19 @@ impl Default for StoryBeat {
         Self {
             mana_gained: 0,
             narration: vec![
-                "Welcome to Summoner's Chess!".to_string(),
-                "You've already selected your first summon,\nwhich you can see to the right"
+                "Welcome to Summoner's Chess!\nSave the town and help reclaim the land with your magic!".to_string(),
+                "You've already selected your first summon, which you can see to the right"
                     .to_string(),
-                "You can click on the summon or press\nthe number key to select it".to_string(),
-                "Then click on the board or press the\nnumber key to place it".to_string(),
-                "When you have finished placing your\nsummons, press Enter to start the battle"
+                "You can click on the summon or press the number key to select it".to_string(),
+                "Then click on the board or press the number key to place it".to_string(),
+                "When you have finished placing your summons, press Enter to start the battle"
                     .to_string(),
-                "When the battle starts, enemies will\nspawn on the opposite side of the board"
+                "When the battle starts, enemies will spawn on the opposite side of the board"
                     .to_string(),
-                "Your creatures have it from there,\nSummoner!".to_string(),
+                "Your creatures have it from there, Summoner! When the battle is done, maybe you'll have learned a few things...".to_string(),
             ],
+            victory: false,
+            defeat: false,
         }
     }
 }
@@ -73,6 +83,10 @@ impl StoryBeat {
             match beat {
                 StoryBeatType::GainMana(mana) => self.mana_gained += mana,
                 StoryBeatType::Narration(narration) => self.narration.push(narration),
+                StoryBeatType::GameOver(victory) => {
+                    self.victory = victory;
+                    self.defeat = !victory;
+                }
             }
         }
     }
@@ -94,6 +108,7 @@ impl StoryBeat {
 pub enum StoryBeatType {
     GainMana(i32),
     Narration(String),
+    GameOver(bool),
 }
 
 pub fn start_story(
@@ -176,8 +191,15 @@ pub fn spawn_all_summons(
         summon_assets.get(summon_handle).unwrap().clone()
     };
     let summoned = spawn_summon(&mut commands, &textures, summon_type.clone(), x, y, true);
+
     let brain = summon_type.get_brain(&brains).unwrap();
     let brain_def = brain_assets.get(brain).unwrap();
+
+    let death_brain = summon_type
+        .get_death_brain(&brains)
+        .unwrap_or(brains.brains.get("death").unwrap().clone());
+    let death_brain_def = brain_assets.get(death_brain).unwrap();
+
     commands.spawn(AudioBundle {
         source: sounds
             .summon_stings
@@ -189,6 +211,7 @@ pub fn spawn_all_summons(
     commands.entity(summoned).insert((
         Into::<CharacterStats>::into(summon_type),
         CharacterBrain::new(brain_def),
+        DeathCharacterBrain(CharacterBrain::new(death_brain_def)),
         faction,
     ));
 }

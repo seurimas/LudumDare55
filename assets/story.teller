@@ -3,6 +3,8 @@ Story (
         "wave0",
         "wave1",
         "wave2",
+        "wave3",
+        "wave4",
     ],
     winning_beats: [
         [Narration("You've successfully defended the town, for today..."), Narration("But the monsters will be back...")],

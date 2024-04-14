@@ -1,19 +1,19 @@
 #![enable(implicit_some)]
 SummonType (
-    summon_name: "Cherub",
-    sprite_idx: 3,
+    summon_name: "Ghoul",
+    sprite_idx: 10,
     health: 5,
     mana_cost: 2,
     stamina: 10,
     stamina_regen: 10,
     attacks: [
-        Attack (stamina_cost: 10, damage: 1, range: 4),
+        Attack (stamina_cost: 10, damage: 2, range: 1),
     ],
     movements: [
         Movement (stamina_cost: 10, tiles: 1),
     ],
-    tagline: "A small angel with a ranged attack.",
-    tribe: Angel,
+    tagline: "A cheap and disposable fighter. Hits harder than a skeleton.",
+    tribe: Undead,
     brain: "fighter",
-    prerequisites: (1, None),
+    prerequisites: (1, "Skeleton"),
 )

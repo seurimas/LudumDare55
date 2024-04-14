@@ -1,0 +1,19 @@
+Executor([
+    Sequence([
+        User(FindNearestAlly),
+        User(PickAura),
+        User(RefreshAuraForTarget),
+    ]),
+    Selector ([
+        Sequence ([
+            User(FindNearestEnemy),
+            User(PickValidAttack),
+            User(AttackTarget)
+        ]),
+        Sequence ([
+            User(FindNearestEnemy),
+            User(PickValidMovement),
+            User(MoveTowardsTarget)
+        ])
+    ])
+])

@@ -1,0 +1,19 @@
+#![enable(implicit_some)]
+SummonType (
+    summon_name: "Vulpine",
+    sprite_idx: 21,
+    health: 3,
+    mana_cost: 3,
+    stamina: 10,
+    stamina_regen: 10,
+    attacks: [
+        Attack (stamina_cost: 10, damage: 3, range: 1),
+    ],
+    movements: [
+        Movement (stamina_cost: 10, tiles: 2),
+    ],
+    tagline: "A fox-like creature. Fast and strong.",
+    tribe: Fairy,
+    brain: "evading",
+    prerequisites: (1, "Wolfine"),
+)

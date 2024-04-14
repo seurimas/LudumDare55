@@ -3,5 +3,7 @@ SummonedMinions (
         (4, 5): "Bones",
         (1, 6): "Bones",
         (6, 7): "Bones",
+        (3, 6): "Bones",
+        (5, 5): "Bones",
     }
 )
