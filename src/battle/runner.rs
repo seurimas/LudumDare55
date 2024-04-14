@@ -14,7 +14,7 @@ pub struct BattleSpeed(pub f32);
 
 impl Default for BattleSpeed {
     fn default() -> Self {
-        Self(0.25)
+        Self(0.5)
     }
 }
 
@@ -27,7 +27,7 @@ pub fn modify_battle_speed(keys: Res<ButtonInput<KeyCode>>, mut battle_speed: Re
     {
         battle_speed.0 = 0.1;
     } else {
-        battle_speed.0 = 0.25;
+        battle_speed.0 = 0.5;
     }
 }
 

@@ -1,6 +1,6 @@
 SummonType (
     summon_name: "Necromancer",
-    sprite_idx: 42,
+    sprite_idx: 43,
     health: 10,
     mana_cost: 1,
     stamina: 10,

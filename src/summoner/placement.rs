@@ -21,6 +21,7 @@ impl SummonedMinions {
     pub fn normalize(&mut self) {
         let mut new_spawns = HashMap::new();
         for ((mut x, mut y), summon) in self.spawn_locations.iter() {
+            info!("Normalizing summon at {}, {}", x, y);
             if x >= 8 || y >= 8 {
                 'retry: loop {
                     x = thread_rng().gen_range(0..8);
