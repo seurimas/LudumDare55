@@ -105,6 +105,7 @@ pub enum SummonBehaviors {
     PickRandomMovement,
     PickAura,
     PickRandomAura,
+    CheckRange(usize),
     AttackTarget,
     MoveTowardsTarget,
     MoveAwayFromTarget,
@@ -344,6 +345,19 @@ impl UnpoweredFunction for SummonBehaviors {
                 if let Some(aura) = model.stats.auras.choose(&mut rand::thread_rng()) {
                     controller.picked_aura = Some(aura.clone());
                     UnpoweredFunctionState::Complete
+                } else {
+                    UnpoweredFunctionState::Failed
+                }
+            }
+            SummonBehaviors::CheckRange(range) => {
+                if let Some((x, y)) = controller.picked_location {
+                    let dx = x as i32 - model.position.0 as i32;
+                    let dy = y as i32 - model.position.1 as i32;
+                    if dx.abs() + dy.abs() <= *range as i32 {
+                        UnpoweredFunctionState::Complete
+                    } else {
+                        UnpoweredFunctionState::Failed
+                    }
                 } else {
                     UnpoweredFunctionState::Failed
                 }

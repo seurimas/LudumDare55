@@ -12,7 +12,7 @@ pub struct LootButton(pub SummonType);
 #[derive(Component)]
 pub struct LootDescriptor(pub Option<SummonType>);
 
-const SUMMONS_PER_LOOT: usize = 6;
+const SUMMONS_PER_LOOT: usize = 4;
 
 pub fn setup_loot_screen(
     mut commands: Commands,

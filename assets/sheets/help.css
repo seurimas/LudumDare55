@@ -1,37 +1,38 @@
-.narration__parent {
+.help__parent {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    justify-items: center;
-    align-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    justify-items: flex-start;
+    align-content: flex-start;
+    align-items: flex-end;
     background-color: #00000000;
 }
 
-.narration__bg {
+.help__bg {
     position-type: absolute;
     width: 100%;
+    max-width: 256px;
     height: 100%;
 }
 
-.narration {
+.help {
     position-type: absolute;
     display: flex;
-    width: 440px;
-    min-height: 80px;
-    height: auto;
-    left: 16px;
-    top: 16px;
+    width: 240px;
+    max-width: 240px;
+    height: 80px;
     background-color: #000000bb;
 }
 
-.narration__text {
+.help__text {
     margin: 8px;
     left: 0px;
     right: 0px;
     top: 0px;
     bottom: 0px;
-    text-align: left;
+    font-size: 40px;
+    max-width: 240px;
+    text-align: center;
 }

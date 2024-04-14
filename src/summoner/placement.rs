@@ -19,6 +19,10 @@ impl SummonedMinions {
         self.spawn_locations.contains_key(&(x, y))
     }
 
+    pub fn iter(&self) -> impl Iterator<Item = (&(usize, usize), &String)> {
+        self.spawn_locations.iter()
+    }
+
     pub fn summons(&self) -> usize {
         self.spawn_locations.len()
     }

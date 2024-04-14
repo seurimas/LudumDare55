@@ -77,6 +77,23 @@ impl AuraEffect {
             AuraEffect::Range(name, _, _) => name,
         }
     }
+
+    pub fn tagline(&self) -> String {
+        match self {
+            AuraEffect::Speed(name, amount, _) => {
+                format!("{}: {}Speed", name, if amount > &0 { "+" } else { "-" })
+            }
+            AuraEffect::Attack(name, amount, _) => {
+                format!("{}: {}Damage", name, if amount > &0 { "+" } else { "-" })
+            }
+            AuraEffect::Health(name, amount, _) => {
+                format!("{}: {}Health", name, if amount > &0 { "+" } else { "-" })
+            }
+            AuraEffect::Range(name, amount, _) => {
+                format!("{}: {}Range", name, if amount > &0 { "+" } else { "-" })
+            }
+        }
+    }
 }
 
 #[derive(Component, Debug, Clone, PartialEq, Eq)]
@@ -132,6 +149,66 @@ impl CharacterStats {
                 }
             }
         }
+    }
+
+    pub fn descriptor(&self) -> Vec<TextSection> {
+        vec![
+            TextSection {
+                value: format!("{:?}\n", self.tribe),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 16.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: format!("Health: {}/{} - ", self.health, self.max_health),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: format!("Stamina: {}\n", self.stamina),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: format!(
+                    "Max Range: {} - Max Damage {}\n",
+                    self.attacks.iter().map(|a| a.range).max().unwrap_or(0),
+                    self.attacks.iter().map(|a| a.damage).max().unwrap_or(0)
+                ),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: if self.auras.is_empty() {
+                    "".to_string()
+                } else {
+                    format!(
+                        "Effects Given: {}\n",
+                        self.auras
+                            .iter()
+                            .map(|a| a.tagline())
+                            .collect::<Vec<_>>()
+                            .join(", ")
+                    )
+                },
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::WHITE,
+                },
+            },
+        ]
     }
 }
 

@@ -7,12 +7,12 @@ Executor([
     Selector ([
         Sequence ([
             User(FindNearestEnemy),
-            User(PickValidAttack),
+            User(PickRandomAttack),
             User(AttackTarget)
         ]),
         Sequence ([
             User(FindNearestEnemy),
-            User(PickValidMovement),
+            User(PickRandomMovement),
             User(MoveTowardsTarget)
         ])
     ])

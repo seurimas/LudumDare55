@@ -7,7 +7,7 @@
     justify-items: center;
     align-content: center;
     align-items: center;
-    margin: 8px;
+    margin: 4px;
 }
 
 .summon_button__bg {
@@ -41,9 +41,10 @@
     top: 8px;
     font-size: 20px;
     color: #000;
+    background-color: #ff0;
 }
 
 .summon_button__mana_cost {
-    color: #77f;
+    color: #000;
     font-size: 20px;
 }

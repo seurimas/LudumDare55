@@ -209,7 +209,6 @@ pub fn spawn_all_summons(
         ..Default::default()
     });
     commands.entity(summoned).insert((
-        Into::<CharacterStats>::into(summon_type),
         CharacterBrain::new(brain_def),
         DeathCharacterBrain(CharacterBrain::new(death_brain_def)),
         faction,

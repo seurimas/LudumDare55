@@ -1,7 +1,6 @@
 use crate::{
     board::{BorderTile, Tile},
     prelude::*,
-    summons,
 };
 
 pub fn check_for_game_over(
@@ -11,6 +10,7 @@ pub fn check_for_game_over(
     sounds: Res<AudioAssets>,
     styles: Res<StyleAssets>,
     textures: Res<TextureAssets>,
+    summons: Query<Entity, With<Summon>>,
 ) {
     if story_beat.victory {
         next_state.set(GameState::Victory);
@@ -19,6 +19,9 @@ pub fn check_for_game_over(
             ..Default::default()
         });
         spawn_overlay(&mut commands, true, &styles, &textures);
+        for entity in summons.iter() {
+            commands.entity(entity).despawn_recursive();
+        }
     } else if story_beat.defeat {
         next_state.set(GameState::Defeat);
         commands.spawn(AudioBundle {
@@ -26,6 +29,9 @@ pub fn check_for_game_over(
             ..Default::default()
         });
         spawn_overlay(&mut commands, false, &styles, &textures);
+        for entity in summons.iter() {
+            commands.entity(entity).despawn_recursive();
+        }
     }
 }
 
@@ -100,7 +106,7 @@ pub fn animate_game_over_defeat(
     let mut living = 0;
     let mut at_top = 0;
     for (entity, mut transform, actor) in query.iter_mut() {
-        transform.translation.y -= TILE_SIZE * time.delta_seconds();
+        transform.translation.y -= 2. * TILE_SIZE * time.delta_seconds();
         let (x, y) = translation_to_tile_position(transform.translation.truncate());
         if y < 0 {
             commands.entity(entity).despawn_recursive();
@@ -128,7 +134,7 @@ pub fn animate_game_over_defeat(
             }
         }
     }
-    if living < 5 && at_top <= 2 {
+    if living < 15 && at_top <= 1 {
         let x = (random::<f32>() * 8.) as usize;
         let y = 8;
         let summon_handle = summons.npc_summons.get("Bones").unwrap();
@@ -151,7 +157,7 @@ pub fn animate_game_over_victory(
     let mut living = 0;
     let mut at_bottom = 0;
     for (entity, mut transform, actor) in query.iter_mut() {
-        transform.translation.y += TILE_SIZE * time.delta_seconds();
+        transform.translation.y += 2. * TILE_SIZE * time.delta_seconds();
         let (x, y) = translation_to_tile_position(transform.translation.truncate());
         if y >= 8 {
             commands.entity(entity).despawn_recursive();
@@ -171,7 +177,7 @@ pub fn animate_game_over_victory(
             living += 1;
         }
     }
-    if living < 5 && at_bottom <= 2 {
+    if living < 15 && at_bottom <= 1 {
         let x = (random::<f32>() * 8.) as usize;
         let y = 0;
         let summon = known_summons.get_random().unwrap();

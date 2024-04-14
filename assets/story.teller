@@ -5,16 +5,23 @@ Story (
         "wave2",
         "wave3",
         "wave4",
+        "boss0",
+        "wave5",
     ],
     winning_beats: [
         [Narration("You've successfully defended the town, for today..."), Narration("But the monsters will be back...")],
     ],
     losing_beats: [
-        [Narration("The town was ransacked by the surviving monsters..."), Narration("It is recovering from this loss.")]
+        [Narration("The town was ransacked by the surviving monsters..."), Narration("It is recovering from this loss.")],
+        [Narration("The town was ransacked by the surviving monsters..."), Narration("It is struggling to recover from this loss.")],
+        [Narration("The town was ransacked by the surviving monsters..."), Narration("It is nearly in ruins.")],
     ],
     agnostic_beats: [
-        [GainMana(1), Narration("Your research has unlocked a new summon!")],
-        [GainMana(1)],
-        [GainMana(2)],
+        [GainMana(1), Narration("Hint: You get a new summon every round, and more mana.")],
+        [GainMana(1), Narration("Hint: You can remove a placed summon with Backspace.")],
+        [GainMana(1), Narration("Hint: Aura effects from Constructs only apply to Angels and Undead. The other support Tribes also support two main tribes each.")],
+        [GainMana(1), Narration("Hint: You can hold Space to slow down combat, or Shift/Enter to speed it up.")],
+        [GainMana(1), Narration("The enemies grow stronger. Something more sinister waits on the horizon...")],
+        [GainMana(1), Narration("Demons join the mindless undead. The town is in grave danger...")],
     ],
 )

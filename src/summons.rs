@@ -9,7 +9,7 @@ pub enum Tribe {
     Elemental,
     Demon,
     #[default]
-    Other,
+    Enemy,
 }
 
 impl Tribe {
@@ -21,7 +21,7 @@ impl Tribe {
             Tribe::Construct => "Construct - Support Angel and Undead with auras",
             Tribe::Elemental => "Elemental - Support Angel and Fairy with boons upon dying",
             Tribe::Demon => "Demon - Support Undead and Fairy with powerful pacts",
-            Tribe::Other => "Mysterious",
+            Tribe::Enemy => "Mysterious",
         }
     }
 
@@ -33,7 +33,7 @@ impl Tribe {
             Tribe::Construct => "construct_summon_sting",
             Tribe::Elemental => "elemental_summon_sting",
             Tribe::Demon => "demon_summon_sting",
-            Tribe::Other => "enemy_summon_sting",
+            Tribe::Enemy => "enemy_summon_sting",
         }
     }
 }
@@ -73,7 +73,7 @@ impl SummonType {
             movements: vec![Movement::debug()],
             auras: vec![],
             tagline: "You shouldn't see this".to_string(),
-            tribe: Tribe::Other,
+            tribe: Tribe::Enemy,
             brain: "fighter".to_string(),
             death_brain: "".to_string(),
             prerequisites: (0, None),
@@ -162,7 +162,7 @@ impl SummonType {
                 style: TextStyle {
                     font: Default::default(),
                     font_size: 12.0,
-                    color: Color::RED,
+                    color: Color::WHITE,
                 },
             },
             TextSection {
@@ -178,7 +178,7 @@ impl SummonType {
                 style: TextStyle {
                     font: Default::default(),
                     font_size: 12.0,
-                    color: Color::BLUE,
+                    color: Color::WHITE,
                 },
             },
         ]
@@ -247,12 +247,13 @@ pub fn spawn_summon(
                 x,
                 y,
             },
+            Into::<CharacterStats>::into(summon_type),
         ))
         .with_children(|parent| {
             parent.spawn((
                 Text2dBundle {
                     text: Text::from_section(
-                        summon_type.name().to_string(),
+                        "".to_string(),
                         TextStyle {
                             font: Default::default(),
                             font_size: 12.0,

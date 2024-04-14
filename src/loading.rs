@@ -79,6 +79,8 @@ pub struct StyleAssets {
     pub narration: Handle<StyleSheetAsset>,
     #[asset(path = "sheets/game_over.css")]
     pub game_over: Handle<StyleSheetAsset>,
+    #[asset(path = "sheets/help.css")]
+    pub help: Handle<StyleSheetAsset>,
 }
 
 #[derive(AssetCollection, Resource)]

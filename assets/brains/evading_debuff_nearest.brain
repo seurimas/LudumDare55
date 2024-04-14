@@ -1,6 +1,10 @@
 Executor([
-    User(PickAura),
-    Wrapper(ForAllAlliesInRange(5), [User(RefreshAuraForTarget)]),
+    Sequence([
+        User(FindNearestEnemy),
+        User(CheckRange(2)),
+        User(PickAura),
+        User(RefreshAuraForTarget),
+    ]),
     Selector ([
         Sequence ([
             User(FindNearestEnemy),

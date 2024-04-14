@@ -1,15 +1,15 @@
 SummonType (
     summon_name: "Bones",
-    sprite_idx: 2,
+    sprite_idx: 40,
     health: 5,
     mana_cost: 1,
     stamina: 10,
     stamina_regen: 10,
     attacks: [
-        Attack (stamina_cost: 1, damage: 1, range: 1),
+        Attack (stamina_cost: 10, damage: 1, range: 1),
     ],
     movements: [
-        Movement (stamina_cost: 5, tiles: 1),
+        Movement (stamina_cost: 10, tiles: 1),
     ],
     brain: "fighter",
     prerequisites: (1, None),

@@ -1,9 +1,11 @@
 use crate::prelude::*;
 
 mod book;
+mod help;
 mod mana;
 mod placement;
 pub use book::*;
+pub use help::*;
 pub use mana::*;
 pub use placement::*;
 
@@ -16,6 +18,9 @@ impl Plugin for SummonerPlugin {
             // Place the summons on the board
             .init_resource::<SummonedMinions>()
             .init_resource::<EnemyMinions>()
+            .add_systems(OnEnter(GameState::Summoning), spawn_help_overlay)
+            .add_systems(Update, show_hovered_stats)
+            .add_systems(OnExit(GameState::Battling), despawn_help_overlay)
             .add_systems(
                 Update,
                 (place_summon, animate_summons, remove_summon)
