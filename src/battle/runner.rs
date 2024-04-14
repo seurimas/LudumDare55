@@ -36,10 +36,12 @@ pub fn prune_turn_order(
 }
 
 pub fn end_battle(
+    mut commands: Commands,
     my_minions: Res<SummonedMinions>,
     enemy_minions: Res<EnemyMinions>,
     mut next_state: ResMut<NextState<GameState>>,
     fighters: Query<(Entity, &Faction, &Summon, &CharacterStats)>,
+    damage_text: Query<Entity, With<DamageText>>,
 ) {
     let mut player_units = my_minions.summons();
     let mut enemy_units = enemy_minions.0.summons();
@@ -54,12 +56,25 @@ pub fn end_battle(
         }
     }
     if player_units == 0 || enemy_units == 0 {
+        for entity in damage_text.iter() {
+            commands.entity(entity).despawn_recursive();
+        }
         next_state.0 = Some(GameState::Looting);
     }
 }
 
+#[derive(Event)]
+pub struct AttackEvent {
+    pub attacker: Entity,
+    pub target: Entity,
+    pub damage: i32,
+}
+
+#[derive(Resource, Default)]
+pub struct BattleTimer(pub f32);
+
 pub fn run_battle(
-    mut ticker: Local<f32>,
+    mut ticker: ResMut<BattleTimer>,
     battle_speed: Res<BattleSpeed>,
     time: Res<Time>,
     mut commands: Commands,
@@ -71,9 +86,10 @@ pub fn run_battle(
         &mut CharacterStats,
         &mut CharacterBrain,
     )>,
+    mut attack_events: EventWriter<AttackEvent>,
 ) {
-    *ticker += time.delta_seconds();
-    if *ticker < battle_speed.0 {
+    ticker.0 += time.delta_seconds();
+    if ticker.0 < battle_speed.0 {
         return;
     }
     if turn_order.order.is_empty() {
@@ -85,7 +101,7 @@ pub fn run_battle(
             .order
             .sort_by_cached_key(|_| rand::random::<u32>());
     }
-    *ticker = 0.;
+    ticker.0 = 0.;
     let mut player_units = vec![];
     let mut enemy_units = vec![];
     for (_entity, faction, summon, _stats, _brain) in fighters.iter() {
@@ -152,12 +168,77 @@ pub fn run_battle(
                 stats.stamina -= attack.stamina_cost;
             }
         }
-        if let Some((_entity, _faction, _summon, mut stats, _brain)) = fighters
+        if let Some((target, _faction, _summon, mut stats, _brain)) = fighters
             .iter_mut()
             .find(|(_, _, summon, _, _)| summon.x == target.0 && summon.y == target.1)
         {
-            info!("Attacking {:?}", stats);
+            attack_events.send(AttackEvent {
+                attacker: entity,
+                target,
+                damage: attack.damage,
+            });
             stats.health -= attack.damage;
+        }
+    }
+}
+
+#[derive(Component)]
+pub struct DamageText(pub f32);
+
+pub fn animate_battle_text(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut damage_query: Query<(Entity, &mut DamageText, &mut Transform)>,
+) {
+    for (entity, mut damage, mut transform) in damage_query.iter_mut() {
+        damage.0 += time.delta_seconds();
+        transform.translation.y += 20. * time.delta_seconds();
+        if damage.0 > 1. {
+            commands.entity(entity).despawn_recursive();
+        }
+    }
+}
+
+pub fn animate_battle(
+    mut commands: Commands,
+    timer: Res<BattleTimer>,
+    speed: Res<BattleSpeed>,
+    time: Res<Time>,
+    mut summon_query: Query<(&Summon, &mut Transform)>,
+    mut attacks: EventReader<AttackEvent>,
+) {
+    let t = time.delta_seconds() / (speed.0 - timer.0).max(0.0001);
+    for (summon, mut transform) in summon_query.iter_mut() {
+        let target = tile_position_to_translation(summon.x as i32, summon.y as i32);
+        let translation = transform.translation.lerp(target.extend(1.), t);
+        transform.translation = translation;
+        if transform.scale.max_element() < 1. {
+            transform.scale += Vec3::splat(0.1);
+        }
+    }
+    for attack in attacks.read() {
+        if let Ok((_, mut transform)) = summon_query.get_mut(attack.target) {
+            transform.scale = Vec3::splat(0.9);
+            commands.spawn((
+                Text2dBundle {
+                    text: Text::from_section(
+                        format!("{}", attack.damage),
+                        TextStyle {
+                            font: Default::default(),
+                            font_size: 16.0,
+                            color: Color::rgb(1., 0., 0.),
+                        },
+                    ),
+                    transform: Transform::from_translation(
+                        transform.translation + Vec3::new(0., 20., 2.),
+                    ),
+                    ..Default::default()
+                },
+                DamageText(0.0),
+            ));
+        }
+        if let Ok((_, mut transform)) = summon_query.get_mut(attack.attacker) {
+            transform.translation.y += 8.;
         }
     }
 }

@@ -17,9 +17,11 @@ impl Plugin for BattlePlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<TurnOrder>()
             .init_resource::<BattleSpeed>()
+            .init_resource::<BattleTimer>()
+            .add_event::<AttackEvent>()
             .add_systems(
                 Update,
-                crate::summoner::animate_summons.run_if(in_state(GameState::Battling)),
+                (animate_battle, animate_battle_text).run_if(in_state(GameState::Battling)),
             )
             .add_systems(
                 Update,
