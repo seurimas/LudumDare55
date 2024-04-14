@@ -187,7 +187,11 @@ pub fn spawn_all_summons(
     let summon_type = if faction == Faction::Player {
         known_summons.get(&summon)
     } else {
-        let summon_handle = summons.npc_summons.get(&*summon).unwrap();
+        let summon_handle = summons
+            .npc_summons
+            .get(&*summon)
+            .or_else(|| summons.player_summons.get(&*summon))
+            .unwrap();
         summon_assets.get(summon_handle).unwrap().clone()
     };
     let summoned = spawn_summon(&mut commands, &textures, summon_type.clone(), x, y, true);

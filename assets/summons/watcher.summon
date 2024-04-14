@@ -2,20 +2,20 @@
 SummonType (
     summon_name: "Watcher",
     sprite_idx: 4,
-    health: 10,
+    health: 3,
     mana_cost: 1,
     stamina: 10,
-    stamina_regen: 10,
+    stamina_regen: 5,
     attacks: [
         Attack (stamina_cost: 10, damage: 1, range: 5),
     ],
     movements: [
-        Movement (stamina_cost: 1, tiles: 1),
+        Movement (stamina_cost: 15, tiles: 1),
     ],
     auras: [
-        Range("Watched", 1, [Angel, Undead])
+        Range("Watched", 1, [Angel, Undead, Construct])
     ],
-    tagline: "A magical watcher with a ranged attack. Improves the range of nearby Angels and Undead.",
+    tagline: "A magical watcher with a ranged attack. Improves the range of nearby Angels, Undead, and Constructs.",
     tribe: Construct,
     brain: "construct",
     prerequisites: (3, None),

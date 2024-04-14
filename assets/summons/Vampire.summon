@@ -5,15 +5,18 @@ SummonType (
     health: 10,
     mana_cost: 5,
     stamina: 10,
-    stamina_regen: 10,
+    stamina_regen: 5,
     attacks: [
-        Attack (stamina_cost: 10, damage: 5, range: 1),
+        Attack (stamina_cost: 15, damage: 4, range: 1),
     ],
     movements: [
-        Movement (stamina_cost: 10, tiles: 2),
+        Movement (stamina_cost: 15, tiles: 2),
     ],
-    tagline: "A terrifying creature of the night, capable of eviscerating its foes.",
+    auras: [
+        Attack ("Weakened", -1, []),
+    ],
+    tagline: "A terrifying creature of the night, capable of draining the power of its enemies.",
     tribe: Undead,
-    brain: "fighter",
+    brain: "draining",
     prerequisites: (5, "Ghost"),
 )

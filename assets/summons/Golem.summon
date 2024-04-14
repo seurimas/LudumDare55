@@ -1,0 +1,22 @@
+#![enable(implicit_some)]
+SummonType (
+    summon_name: "Golem",
+    sprite_idx: 12,
+    health: 10,
+    mana_cost: 1,
+    stamina: 10,
+    stamina_regen: 5,
+    attacks: [
+        Attack (stamina_cost: 10, damage: 1, range: 1),
+    ],
+    movements: [
+        Movement (stamina_cost: 15, tiles: 1),
+    ],
+    auras: [
+        Health("Bolstered", 5, [Angel, Undead, Construct])
+    ],
+    tagline: "A sturdy construct, capable of boosting the health of nearby Angels, Undead, and Constructs.",
+    tribe: Construct,
+    brain: "construct",
+    prerequisites: (3, "Watcher"),
+)

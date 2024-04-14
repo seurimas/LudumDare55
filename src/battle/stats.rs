@@ -120,9 +120,7 @@ impl CharacterStats {
             AuraEffect::Speed(_, speed, tribes) => {
                 if tribes.is_empty() || tribes.contains(&self.tribe) {
                     self.applied_auras.push(aura.clone());
-                    for movement in self.movements.iter_mut() {
-                        movement.tiles += speed;
-                    }
+                    self.stamina_regen += speed;
                 }
             }
             AuraEffect::Attack(_, bonus, tribes) => {

@@ -12,7 +12,7 @@ SummonType (
         Movement (stamina_cost: 10, tiles: 1),
     ],
     auras: [
-        Health("Pained", -2, []),
+        Health("Pained", -4, []),
     ],
     brain: "evading_debuff_nearest",
     prerequisites: (1, None),

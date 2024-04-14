@@ -1,10 +1,11 @@
+
 Selector ([
     Sequence ([
         User(FindNearestEnemy),
         User(PickRandomAttack),
         User(AttackTarget),
-        User(PickRandomMovement),
-        User(MoveAwayFromTarget),
+        User(PickRandomAura),
+        User(RefreshAuraForTarget),
     ]),
     Sequence ([
         User(FindNearestEnemy),

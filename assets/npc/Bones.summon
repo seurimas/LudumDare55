@@ -4,7 +4,7 @@ SummonType (
     health: 5,
     mana_cost: 1,
     stamina: 10,
-    stamina_regen: 10,
+    stamina_regen: 5,
     attacks: [
         Attack (stamina_cost: 10, damage: 1, range: 1),
     ],

@@ -5,12 +5,12 @@ SummonType (
     health: 10,
     mana_cost: 2,
     stamina: 10,
-    stamina_regen: 10,
+    stamina_regen: 5,
     attacks: [
         Attack (stamina_cost: 10, damage: 1, range: 1),
     ],
     movements: [
-        Movement (stamina_cost: 3, tiles: 1),
+        Movement (stamina_cost: 5, tiles: 1),
     ],
     tagline: "A large angel fit for the frontlines.",
     tribe: Angel,

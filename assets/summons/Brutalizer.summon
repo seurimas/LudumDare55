@@ -1,7 +1,7 @@
 #![enable(implicit_some)]
 SummonType (
-    summon_name: "Butcher",
-    sprite_idx: 7,
+    summon_name: "Brutalizer",
+    sprite_idx: 23,
     health: 5,
     mana_cost: 3,
     stamina: 10,
@@ -13,9 +13,9 @@ SummonType (
         Movement (stamina_cost: 15, tiles: 1),
     ],
     auras: [
-        Health("Fresh Meat", 5, [Undead, Fairy]),
+        Speed("Sadism", 5, [Undead, Fairy]),
     ],
-    tagline: "Their pact boosts the health of the nearest Undead or Fairy.",
+    tagline: "Their pact boosts the stamina of the nearest Undead or Fairy.",
     tribe: Demon,
     brain: "demon",
     prerequisites: (3, None),

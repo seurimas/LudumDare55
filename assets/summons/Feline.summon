@@ -10,10 +10,14 @@ SummonType (
         Attack (stamina_cost: 10, damage: 3, range: 1),
     ],
     movements: [
-        Movement (stamina_cost: 0, tiles: 3),
+        Movement (stamina_cost: 0, tiles: 2),
+    ],
+    auras: [
+        Speed ("Captured", -5, [Enemy]),
+        Health("Mauled", -5, [Enemy])
     ],
     tagline: "A cat-like forest spirit, the embodiment of speed and violence.",
     tribe: Fairy,
-    brain: "fighter",
+    brain: "draining",
     prerequisites: (1, "Vulpine"),
 )

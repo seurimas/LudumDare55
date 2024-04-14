@@ -19,7 +19,7 @@ Story (
     agnostic_beats: [
         [GainMana(1), Narration("Hint: You get a new summon every round, and more mana.")],
         [GainMana(1), Narration("Hint: You can remove a placed summon with Backspace.")],
-        [GainMana(1), Narration("Hint: Aura effects from Constructs only apply to Angels and Undead. The other support Tribes also support two main tribes each.")],
+        [GainMana(1), Narration("Hint: Constructs support each other, as well as Angels and Undead.")],
         [GainMana(1), Narration("Hint: You can hold Space to slow down combat, or Shift/Enter to speed it up.")],
         [GainMana(1), Narration("The enemies grow stronger. Something more sinister waits on the horizon...")],
         [GainMana(1), Narration("Demons join the mindless undead. The town is in grave danger...")],

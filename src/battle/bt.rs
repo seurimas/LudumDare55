@@ -140,20 +140,14 @@ impl UnpoweredFunction for SummonWrapper {
             SummonWrapper::ForAllAllies(node) => {
                 for ally in &model.allies {
                     controller.picked_location = Some(*ally);
-                    match node.resume_with(model, controller) {
-                        UnpoweredFunctionState::Complete => {}
-                        _ => return UnpoweredFunctionState::Failed,
-                    }
+                    node.resume_with(model, controller);
                 }
                 UnpoweredFunctionState::Complete
             }
             SummonWrapper::ForAllEnemies(node) => {
                 for enemy in &model.enemies {
                     controller.picked_location = Some(*enemy);
-                    match node.resume_with(model, controller) {
-                        UnpoweredFunctionState::Complete => {}
-                        _ => return UnpoweredFunctionState::Failed,
-                    }
+                    node.resume_with(model, controller);
                 }
                 UnpoweredFunctionState::Complete
             }
@@ -163,10 +157,7 @@ impl UnpoweredFunction for SummonWrapper {
                     let dy = ally.1 as i32 - model.position.1 as i32;
                     if dx.abs() + dy.abs() <= *range {
                         controller.picked_location = Some(*ally);
-                        match node.resume_with(model, controller) {
-                            UnpoweredFunctionState::Complete => {}
-                            _ => return UnpoweredFunctionState::Failed,
-                        }
+                        node.resume_with(model, controller);
                     }
                 }
                 UnpoweredFunctionState::Complete
@@ -177,10 +168,7 @@ impl UnpoweredFunction for SummonWrapper {
                     let dy = enemy.1 as i32 - model.position.1 as i32;
                     if dx.abs() + dy.abs() <= *range {
                         controller.picked_location = Some(*enemy);
-                        match node.resume_with(model, controller) {
-                            UnpoweredFunctionState::Complete => {}
-                            _ => return UnpoweredFunctionState::Failed,
-                        }
+                        node.resume_with(model, controller);
                     }
                 }
                 UnpoweredFunctionState::Complete

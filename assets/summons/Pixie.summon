@@ -5,12 +5,12 @@ SummonType (
     health: 3,
     mana_cost: 1,
     stamina: 10,
-    stamina_regen: 10,
+    stamina_regen: 20,
     attacks: [
-        Attack (stamina_cost: 2, damage: 1, range: 2),
+        Attack (stamina_cost: 10, damage: 1, range: 2),
     ],
     movements: [
-        Movement (stamina_cost: 3, tiles: 1),
+        Movement (stamina_cost: 10, tiles: 1),
     ],
     tagline: "An evasive pixie, capable of jumping away from danger.",
     tribe: Fairy,

@@ -1,4 +1,10 @@
 Sequence([
     User(PickAura),
     Wrapper(ForAllAllies, [User(RefreshAuraForTarget)]),
+    Wrapper(ForAllEnemies, [
+        Sequence([
+            User(PickRandomAttack),
+            User(AttackTarget),
+        ])
+    ])
 ])
