@@ -105,6 +105,8 @@ pub enum SummonBehaviors {
     PickRandomMovement,
     PickAura,
     PickRandomAura,
+    PickFriendlyAura,
+    PickUnfriendlyAura,
     CheckRange(usize),
     AttackTarget,
     MoveTowardsTarget,
@@ -332,6 +334,36 @@ impl UnpoweredFunction for SummonBehaviors {
             SummonBehaviors::PickRandomAura => {
                 if let Some(aura) = model.stats.auras.choose(&mut rand::thread_rng()) {
                     controller.picked_aura = Some(aura.clone());
+                    UnpoweredFunctionState::Complete
+                } else {
+                    UnpoweredFunctionState::Failed
+                }
+            }
+            SummonBehaviors::PickFriendlyAura => {
+                if let Some(aura) = model
+                    .stats
+                    .auras
+                    .iter()
+                    .filter(|aura| aura.is_friendly())
+                    .collect::<Vec<_>>()
+                    .choose(&mut rand::thread_rng())
+                {
+                    controller.picked_aura = Some(aura.to_owned().clone());
+                    UnpoweredFunctionState::Complete
+                } else {
+                    UnpoweredFunctionState::Failed
+                }
+            }
+            SummonBehaviors::PickUnfriendlyAura => {
+                if let Some(aura) = model
+                    .stats
+                    .auras
+                    .iter()
+                    .filter(|aura| !aura.is_friendly())
+                    .collect::<Vec<_>>()
+                    .choose(&mut rand::thread_rng())
+                {
+                    controller.picked_aura = Some(aura.to_owned().clone());
                     UnpoweredFunctionState::Complete
                 } else {
                     UnpoweredFunctionState::Failed

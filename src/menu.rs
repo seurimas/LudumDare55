@@ -30,7 +30,19 @@ impl Default for ButtonColors {
 #[derive(Component)]
 struct Menu;
 
-fn setup_menu(mut commands: Commands, styles: Res<StyleAssets>) {
+fn setup_menu(
+    mut commands: Commands,
+    styles: Res<StyleAssets>,
+    textures: Res<TextureAssets>,
+    sounds: Res<AudioAssets>,
+) {
+    commands.spawn((
+        AudioBundle {
+            source: sounds.welcome.clone(),
+            settings: PlaybackSettings::LOOP,
+        },
+        Menu,
+    ));
     commands.spawn(Camera2dBundle::default());
     commands
         .spawn((
@@ -39,9 +51,9 @@ fn setup_menu(mut commands: Commands, styles: Res<StyleAssets>) {
             Class::new("main_menu"),
             Menu,
         ))
-        .with_children(|children| {
+        .with_children(|parent| {
             let button_colors = ButtonColors::default();
-            children
+            parent
                 .spawn((
                     ButtonBundle {
                         style: Style {
@@ -68,55 +80,14 @@ fn setup_menu(mut commands: Commands, styles: Res<StyleAssets>) {
                         },
                     ));
                 });
-        });
-    commands
-        .spawn((
-            NodeBundle {
-                style: Style {
-                    flex_direction: FlexDirection::Row,
-                    align_items: AlignItems::Center,
-                    justify_content: JustifyContent::SpaceAround,
-                    bottom: Val::Px(5.),
-                    width: Val::Percent(100.),
-                    position_type: PositionType::Absolute,
-                    ..default()
+            parent.spawn((
+                ImageBundle {
+                    image: UiImage::new(textures.title.clone()),
+                    z_index: ZIndex::Local(1),
+                    ..Default::default()
                 },
-                ..default()
-            },
-            Menu,
-        ))
-        .with_children(|children| {
-            children
-                .spawn((
-                    ButtonBundle {
-                        style: Style {
-                            width: Val::Px(170.0),
-                            height: Val::Px(50.0),
-                            justify_content: JustifyContent::SpaceAround,
-                            align_items: AlignItems::Center,
-                            padding: UiRect::all(Val::Px(5.)),
-                            ..default()
-                        },
-                        background_color: Color::NONE.into(),
-                        ..Default::default()
-                    },
-                    ButtonColors {
-                        normal: Color::NONE,
-                        hovered: Color::rgb(0.25, 0.25, 0.25),
-                    },
-                    Class::new("main_menu__open_source"),
-                    OpenLink("https://github.com/NiklasEi/bevy_game_template"),
-                ))
-                .with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        "Open source",
-                        TextStyle {
-                            font_size: 15.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
-                            ..default()
-                        },
-                    ));
-                });
+                Class::new("main_menu__title"),
+            ));
         });
 }
 

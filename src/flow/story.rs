@@ -1,6 +1,6 @@
 use bevy::log::tracing_subscriber::fmt::time;
 
-use crate::{battle::DeathCharacterBrain, prelude::*};
+use crate::{battle::DeathCharacterBrain, prelude::*, summoner::NextWave};
 
 #[derive(Serialize, Deserialize, Default, Resource, Asset, TypePath, Clone)]
 pub struct Story {
@@ -12,13 +12,14 @@ pub struct Story {
 
 impl Story {
     pub fn win(&mut self) -> Vec<StoryBeatType> {
+        if !self.losing_beats.is_empty() {
+            self.losing_beats.remove(0);
+        }
         let mut winning = if self.winning_beats.is_empty() {
             if self.waves.is_empty() {
                 vec![StoryBeatType::GameOver(true)]
             } else {
-                vec![StoryBeatType::Narration(
-                    "The dark forces were repelled!".to_string(),
-                )]
+                vec![]
             }
         } else {
             self.winning_beats.remove(0)
@@ -30,6 +31,9 @@ impl Story {
     }
 
     pub fn lose(&mut self) -> Vec<StoryBeatType> {
+        if !self.winning_beats.is_empty() {
+            self.winning_beats.remove(0);
+        }
         let mut losing = if self.losing_beats.is_empty() {
             vec![StoryBeatType::GameOver(false)]
         } else {
@@ -58,8 +62,8 @@ impl Default for StoryBeat {
                 "Welcome to Summoner's Chess!\nSave the town and help reclaim the land with your magic!".to_string(),
                 "You've already selected your first summon, which you can see to the right"
                     .to_string(),
-                "You can click on the summon or press the number key to select it".to_string(),
-                "Then click on the board or press the number key to place it".to_string(),
+                "You can click on the summon or press the hotkey to select it".to_string(),
+                "Then click on the board or press the hotkey to place it".to_string(),
                 "When you have finished placing your summons, press Enter to start the battle"
                     .to_string(),
                 "When the battle starts, enemies will spawn on the opposite side of the board"
@@ -127,10 +131,9 @@ pub fn queue_next_wave(
     mut story: ResMut<Story>,
     story_beat: Res<StoryBeat>,
     mut next_state: ResMut<NextState<GameState>>,
+    mut next_wave: ResMut<NextWave>,
     mut enemy_minions: ResMut<EnemyMinions>,
     keys: Res<ButtonInput<KeyCode>>,
-    summon_assets: Res<SummonsAssets>,
-    wave_assets: Res<Assets<SummonedMinions>>,
     summon_entities: Query<Entity, With<Summon>>,
     my_minions: Res<SummonedMinions>,
     sounds: Res<AudioAssets>,
@@ -143,9 +146,8 @@ pub fn queue_next_wave(
             });
             return;
         }
-        let wave = summon_assets.waves.get(&*story.waves.remove(0)).unwrap();
-        let wave = wave_assets.get(wave).unwrap();
-        enemy_minions.0 = wave.clone();
+        let wave = core::mem::take(&mut next_wave.0);
+        enemy_minions.0 = wave;
         next_state.set(GameState::Battling);
         for entity in summon_entities.iter() {
             commands.entity(entity).despawn_recursive();

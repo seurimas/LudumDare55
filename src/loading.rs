@@ -45,6 +45,19 @@ pub struct AudioAssets {
         collection(typed, mapped)
     )]
     pub summon_stings: HashMap<FileStem, Handle<AudioSource>>,
+    #[asset(
+        paths(
+            "audio/angel_death_sting.wav",
+            "audio/construct_death_sting.wav",
+            "audio/demon_death_sting.wav",
+            "audio/elemental_death_sting.wav",
+            "audio/fairy_death_sting.wav",
+            "audio/undead_death_sting.wav",
+            "audio/enemy_death_sting.wav"
+        ),
+        collection(typed, mapped)
+    )]
+    pub death_stings: HashMap<FileStem, Handle<AudioSource>>,
     #[asset(path = "audio/defeat_sting.wav")]
     pub defeat_sting: Handle<AudioSource>,
     #[asset(path = "audio/victory_sting.wav")]
@@ -63,6 +76,8 @@ pub struct AudioAssets {
     pub game_over_victory: Handle<AudioSource>,
     #[asset(path = "audio/game_over_defeat.wav")]
     pub game_over_defeat: Handle<AudioSource>,
+    #[asset(path = "audio/welcome.wav")]
+    pub welcome: Handle<AudioSource>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -100,6 +115,8 @@ pub struct TextureAssets {
     pub narration: Handle<Image>,
     #[asset(path = "Background.png")]
     pub background: Handle<Image>,
+    #[asset(path = "Title.png")]
+    pub title: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]

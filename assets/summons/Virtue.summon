@@ -7,6 +7,7 @@ SummonType (
     stamina: 10,
     stamina_regen: 20,
     attacks: [
+        Attack (stamina_cost: 10, damage: 2, range: 2),
         Attack (stamina_cost: 10, damage: 3, range: 4),
     ],
     movements: [
@@ -14,6 +15,6 @@ SummonType (
     ],
     tagline: "A power angel who can deliver great damage at range.",
     tribe: Angel,
-    brain: "evading",
+    brain: "evading_prioritized",
     prerequisites: (1, "Guardian"),
 )

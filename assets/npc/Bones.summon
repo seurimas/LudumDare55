@@ -11,6 +11,7 @@ SummonType (
     movements: [
         Movement (stamina_cost: 10, tiles: 1),
     ],
+    tribe: Undead,
     brain: "fighter",
     prerequisites: (1, None),
 )

@@ -78,6 +78,15 @@ impl AuraEffect {
         }
     }
 
+    pub fn is_friendly(&self) -> bool {
+        match self {
+            AuraEffect::Speed(_, amount, _) => amount > &0,
+            AuraEffect::Attack(_, amount, _) => amount > &0,
+            AuraEffect::Health(_, amount, _) => amount > &0,
+            AuraEffect::Range(_, amount, _) => amount > &0,
+        }
+    }
+
     pub fn tagline(&self) -> String {
         match self {
             AuraEffect::Speed(name, amount, _) => {
@@ -99,9 +108,11 @@ impl AuraEffect {
 #[derive(Component, Debug, Clone, PartialEq, Eq)]
 pub struct CharacterStats {
     pub max_health: i32,
+    pub is_dead: bool,
     pub health: i32,
     pub stamina: i32,
     pub stamina_regen: i32,
+    pub name: String,
     pub tribe: Tribe,
     pub attacks: Vec<Attack>,
     pub movements: Vec<Movement>,
@@ -110,6 +121,10 @@ pub struct CharacterStats {
 }
 
 impl CharacterStats {
+    pub fn kill(&mut self) {
+        self.is_dead = true;
+    }
+
     pub fn apply_aura(&mut self, aura: AuraEffect) {
         for applied_aura in self.applied_auras.iter() {
             if applied_aura == &aura {
@@ -152,7 +167,7 @@ impl CharacterStats {
     pub fn descriptor(&self) -> Vec<TextSection> {
         vec![
             TextSection {
-                value: format!("{:?}\n", self.tribe),
+                value: format!("{} - {:?}\n", self.name, self.tribe),
                 style: TextStyle {
                     font: Default::default(),
                     font_size: 16.0,

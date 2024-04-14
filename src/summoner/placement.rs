@@ -12,9 +12,30 @@ pub struct SummonedMinions {
 }
 
 #[derive(Resource, Default)]
+pub struct NextWave(pub SummonedMinions);
+
+#[derive(Resource, Default)]
 pub struct EnemyMinions(pub SummonedMinions);
 
 impl SummonedMinions {
+    pub fn normalize(&mut self) {
+        let mut new_spawns = HashMap::new();
+        for ((mut x, mut y), summon) in self.spawn_locations.iter() {
+            if x >= 8 || y >= 8 {
+                'retry: loop {
+                    x = thread_rng().gen_range(0..8);
+                    y = thread_rng().gen_range(3..8);
+                    if !new_spawns.contains_key(&(x, y)) {
+                        new_spawns.insert((x, y), summon.clone());
+                        break 'retry;
+                    }
+                }
+            } else {
+                new_spawns.insert((x, y), summon.clone());
+            }
+        }
+        self.spawn_locations = new_spawns;
+    }
     pub fn has_spawn_location(&self, x: usize, y: usize) -> bool {
         self.spawn_locations.contains_key(&(x, y))
     }

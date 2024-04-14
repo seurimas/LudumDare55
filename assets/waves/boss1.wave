@@ -1,0 +1,16 @@
+SummonedMinions (
+    spawn_locations: {
+        (4, 7): "Necromancer",
+        (0, 7): "Pain",
+        (7, 7): "Pain",
+        (9, 9): "Ghoul",
+        (9, 9): "Ghoul",
+        (9, 9): "Ghoul",
+        (9, 9): "Ghoul",
+        (9, 9): "Bones",
+        (9, 9): "Bones",
+        (9, 9): "Bones",
+        (9, 9): "Bones",
+        (9, 9): "Bones",
+    }
+)

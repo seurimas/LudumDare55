@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{prelude::*, summoner::NextWave};
 
 pub struct StoryPlugin;
 
@@ -14,6 +14,7 @@ impl Plugin for StoryPlugin {
         app.init_resource::<Story>()
             .init_resource::<StoryBeat>()
             .init_resource::<SpawnProgress>()
+            .init_resource::<NextWave>()
             .add_systems(OnExit(GameState::Loading), start_story)
             .add_systems(
                 Update,
@@ -43,14 +44,19 @@ impl Plugin for StoryPlugin {
 fn show_next_wave(
     mut commands: Commands,
     textures: Res<TextureAssets>,
-    story: Res<Story>,
+    mut story: ResMut<Story>,
     waves: Res<Assets<SummonedMinions>>,
+    mut next_wave: ResMut<NextWave>,
     summon_types: Res<Assets<SummonType>>,
     summons: Res<SummonsAssets>,
 ) {
-    if let Some(wave) = story.waves.get(0) {
+    if !story.waves.is_empty() {
+        let wave = story.waves.remove(0);
+        info!("Spawning wave: {}", wave);
         let minions = summons.waves.get(&*wave.to_string()).unwrap();
-        let wave = waves.get(minions).unwrap();
+        let mut wave = waves.get(minions).unwrap().clone();
+        wave.normalize();
+        next_wave.0 = wave.clone();
         for ((x, y), summon) in wave.iter() {
             let summon_type = summons
                 .npc_summons

@@ -7,21 +7,47 @@ Story (
         "wave4",
         "boss0",
         "wave5",
+        "wave6",
+        "wave7",
+        "wave8",
+        "boss1",
     ],
     winning_beats: [
-        [Narration("You've successfully defended the town, for today..."), Narration("But the monsters will be back...")],
+        [Narration("You've successfully defended the town, for today..."), Narration("But the monsters will be back...")], // Won 0
+        [], // Won 1
+        [], // Won 2
+        [], // Won 3
+        [], // Won 4
+        [Narration("After facing down Death itself, the town is in good spirits.")], // Won Boss
+        [], // Won 5
+        [], // Won 6
+        [], // Won 7
+        [], // Won 8
+        [GameOver(true)], // Won Boss
     ],
     losing_beats: [
-        [Narration("The town was ransacked by the surviving monsters..."), Narration("It is recovering from this loss.")],
-        [Narration("The town was ransacked by the surviving monsters..."), Narration("It is struggling to recover from this loss.")],
-        [Narration("The town was ransacked by the surviving monsters..."), Narration("It is nearly in ruins.")],
+        [Narration("The town was ransacked by the surviving monsters...")], // Lost 0
+        [Narration("The town was ransacked by the surviving monsters...")], // Lost 1
+        [Narration("The town was ransacked by the surviving monsters...")], // Lost 2
+        [Narration("The town was ransacked by the surviving monsters...")], // Lost 3
+        [Narration("The town was ransacked by the surviving monsters...")], // Lost 4
+        [Narration("The town was visited by Death itself. The survivors will never forget...")], // Lost Boss
+        [Narration("The town was ransacked by the surviving monsters...")], // Lost 5
+        [Narration("The town was ransacked by the surviving monsters...")], // Lost 6
+        [Narration("The town was ransacked by the surviving monsters...")], // Lost 7
+        [Narration("The town was ransacked by the surviving monsters...")], // Lost 8
+        [GameOver(false)], // Lost Boss
     ],
     agnostic_beats: [
-        [GainMana(1), Narration("Hint: You get a new summon every round, and more mana.")],
-        [GainMana(1), Narration("Hint: You can remove a placed summon with Backspace.")],
-        [GainMana(1), Narration("Hint: Constructs support each other, as well as Angels and Undead.")],
-        [GainMana(1), Narration("Hint: You can hold Space to slow down combat, or Shift/Enter to speed it up.")],
-        [GainMana(1), Narration("The enemies grow stronger. Something more sinister waits on the horizon...")],
-        [GainMana(1), Narration("Demons join the mindless undead. The town is in grave danger...")],
+        [GainMana(1), Narration("Hint: You can remove a placed summon with Backspace.")], // Before 1
+        [GainMana(1), Narration("Hint: There are three main tribes: Angel, Undead, and Fairy.\nConstructs, Elementals, and Demons are support tribes.")], // Before 2
+        [GainMana(1), Narration("Hint: Support tribes only support two of the main tribes.")], // Before 3
+        [GainMana(1), Narration("Hint: You can hold Space to slow down combat, or Shift/Enter to speed it up.")], // Before 4
+        [GainMana(1), Narration("Scouts have spotted Death himself on the horizon. Prepare for a tough battle...")], // Before Boss.
+        [GainMana(3), Narration("Facing down Death itself has taught you a few things. You now have more mana to work with.")], // Before 5
+        [GainMana(1)], // Before 6
+        [GainMana(1)], // Before 7
+        [GainMana(1)], // Before 8
+        [GainMana(2), Narration("Scouts have spotted the Necromancer's forces. Prepare for your final battle!")], // Before Boss
     ],
 )

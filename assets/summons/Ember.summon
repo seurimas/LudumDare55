@@ -19,7 +19,7 @@ SummonType (
     ],
     tagline: "Fundamental fire. Explodes in a burst of flame when defeated.",
     tribe: Elemental,
-    brain: "fighter",
+    brain: "fighter_prioritized",
     death_brain: "elemental_buff_death",
     prerequisites: (3, "Wisp"),
 )

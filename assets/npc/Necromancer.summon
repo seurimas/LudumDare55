@@ -1,0 +1,22 @@
+SummonType (
+    summon_name: "Necromancer",
+    sprite_idx: 42,
+    health: 10,
+    mana_cost: 1,
+    stamina: 10,
+    stamina_regen: 5,
+    attacks: [
+        Attack (stamina_cost: 10, damage: 2, range: 3),
+    ],
+    movements: [
+        Movement (stamina_cost: 10, tiles: 1),
+    ],
+    auras: [
+        Attack ("Weakened", -1, []),
+        Health ("Pained", -2, []),
+        Attack ("Unholy Fervor", 1, []),
+    ],
+    tribe: Undead,
+    brain: "draining",
+    prerequisites: (1, None),
+)

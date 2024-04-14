@@ -1,0 +1,14 @@
+Selector ([
+    Sequence ([
+        User(FindNearestEnemy),
+        User(PickValidAttack),
+        User(AttackTarget),
+        User(PickRandomMovement),
+        User(MoveAwayFromTarget),
+    ]),
+    Sequence ([
+        User(FindNearestEnemy),
+        User(PickRandomMovement),
+        User(MoveTowardsTarget)
+    ])
+])

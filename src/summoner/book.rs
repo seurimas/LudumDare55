@@ -13,16 +13,16 @@ pub struct KnownSummons {
 }
 
 pub const HOTKEYS: [KeyCode; 10] = [
-    KeyCode::Digit1,
-    KeyCode::Digit2,
-    KeyCode::Digit3,
-    KeyCode::Digit4,
-    KeyCode::Digit5,
-    KeyCode::Digit6,
-    KeyCode::Digit7,
-    KeyCode::Digit8,
-    KeyCode::Digit9,
-    KeyCode::Digit0,
+    KeyCode::KeyQ,
+    KeyCode::KeyW,
+    KeyCode::KeyE,
+    KeyCode::KeyR,
+    KeyCode::KeyT,
+    KeyCode::KeyY,
+    KeyCode::KeyU,
+    KeyCode::KeyI,
+    KeyCode::KeyO,
+    KeyCode::KeyP,
 ];
 
 impl KnownSummons {
@@ -303,16 +303,16 @@ pub fn show_hotkeys(
                     .map(|(key, _)| key)
                 {
                     text.sections[0].value = match key {
-                        KeyCode::Digit0 => "0".to_string(),
-                        KeyCode::Digit1 => "1".to_string(),
-                        KeyCode::Digit2 => "2".to_string(),
-                        KeyCode::Digit3 => "3".to_string(),
-                        KeyCode::Digit4 => "4".to_string(),
-                        KeyCode::Digit5 => "5".to_string(),
-                        KeyCode::Digit6 => "6".to_string(),
-                        KeyCode::Digit7 => "7".to_string(),
-                        KeyCode::Digit8 => "8".to_string(),
-                        KeyCode::Digit9 => "9".to_string(),
+                        KeyCode::KeyQ => "Q".to_string(),
+                        KeyCode::KeyW => "W".to_string(),
+                        KeyCode::KeyE => "E".to_string(),
+                        KeyCode::KeyR => "R".to_string(),
+                        KeyCode::KeyT => "T".to_string(),
+                        KeyCode::KeyY => "Y".to_string(),
+                        KeyCode::KeyU => "U".to_string(),
+                        KeyCode::KeyI => "I".to_string(),
+                        KeyCode::KeyO => "O".to_string(),
+                        KeyCode::KeyP => "P".to_string(),
                         _ => "".to_string(),
                     };
                 } else {

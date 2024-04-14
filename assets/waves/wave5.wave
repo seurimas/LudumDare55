@@ -1,7 +1,10 @@
 SummonedMinions (
     spawn_locations: {
         (2, 7): "Pain",
-        (3, 5): "Bones",
-        (4, 5): "Bones",
+        (9, 9): "Ghoul",
+        (9, 10): "Ghoul",
+        (9, 11): "Bones",
+        (9, 12): "Bones",
+        (9, 13): "Bones",
     }
 )

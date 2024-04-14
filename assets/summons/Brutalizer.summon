@@ -18,5 +18,5 @@ SummonType (
     tagline: "Their pact boosts the stamina of the nearest Undead or Fairy.",
     tribe: Demon,
     brain: "demon",
-    prerequisites: (3, None),
+    prerequisites: (5, None),
 )

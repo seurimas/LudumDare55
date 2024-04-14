@@ -1,3 +1,5 @@
+use bevy::utils::hashbrown::HashSet;
+
 use crate::{prelude::*, summons::OverheadText};
 
 use super::DeathCharacterBrain;
@@ -117,10 +119,14 @@ pub fn run_battle(
     ticker.0 = 0.;
     let mut player_units = vec![];
     let mut enemy_units = vec![];
-    for (_entity, faction, summon, _stats, _brain, _death) in fighters.iter() {
+    let mut dead_units = HashSet::new();
+    for (_entity, faction, summon, stats, _brain, _death) in fighters.iter() {
         match faction {
             Faction::Player => player_units.push((summon.x, summon.y)),
             Faction::Enemy => enemy_units.push((summon.x, summon.y)),
+        }
+        if stats.health <= 0 {
+            dead_units.insert((summon.x, summon.y));
         }
     }
     if player_units.is_empty() && enemy_units.is_empty() {
@@ -141,19 +147,19 @@ pub fn run_battle(
             enemies: match faction {
                 Faction::Player => enemy_units.clone(),
                 Faction::Enemy => player_units.clone(),
-            },
+            }
+            .iter()
+            .filter(|(x, y)| *x != summon.x || *y != summon.y && !dead_units.contains(&(*x, *y)))
+            .cloned()
+            .collect(),
             allies: match faction {
-                Faction::Player => player_units
-                    .iter()
-                    .filter(|(x, y)| *x != summon.x || *y != summon.y)
-                    .cloned()
-                    .collect(),
-                Faction::Enemy => enemy_units
-                    .iter()
-                    .filter(|(x, y)| *x != summon.x || *y != summon.y)
-                    .cloned()
-                    .collect(),
-            },
+                Faction::Player => player_units,
+                Faction::Enemy => enemy_units,
+            }
+            .iter()
+            .filter(|(x, y)| *x != summon.x || *y != summon.y && !dead_units.contains(&(*x, *y)))
+            .cloned()
+            .collect(),
         };
         let mut controller = BehaviorController {
             actions: vec![],
@@ -241,21 +247,34 @@ pub fn animate_battle(
     timer: Res<BattleTimer>,
     speed: Res<BattleSpeed>,
     time: Res<Time>,
-    mut summon_query: Query<(&Summon, &mut Transform)>,
+    mut summon_query: Query<(&Summon, &mut Transform, &mut CharacterStats)>,
     mut attacks: EventReader<AttackEvent>,
     sounds: Res<AudioAssets>,
 ) {
     let t = time.delta_seconds() / (speed.0 - timer.0).max(0.0001).min(1.);
-    for (summon, mut transform) in summon_query.iter_mut() {
+    for (summon, mut transform, mut stats) in summon_query.iter_mut() {
         let target = tile_position_to_translation(summon.x as i32, summon.y as i32);
         let translation = transform.translation.lerp(target.extend(1.), t);
         transform.translation = translation;
-        if transform.scale.max_element() < 1. {
+        if stats.health <= 0 {
+            if !stats.is_dead {
+                commands.spawn(AudioBundle {
+                    source: sounds
+                        .death_stings
+                        .get(summon.summon_type.tribe.death_sting())
+                        .unwrap()
+                        .clone(),
+                    ..Default::default()
+                });
+                stats.kill();
+            }
+            transform.scale = transform.scale.lerp(Vec3::splat(0.1), t);
+        } else if transform.scale.max_element() < 1. {
             transform.scale += Vec3::splat(0.1);
         }
     }
     for attack in attacks.read() {
-        if let Ok((_, mut transform)) = summon_query.get_mut(attack.target) {
+        if let Ok((_, mut transform, _)) = summon_query.get_mut(attack.target) {
             transform.scale = Vec3::splat(0.9);
             commands.spawn((
                 Text2dBundle {
@@ -279,7 +298,7 @@ pub fn animate_battle(
                 ..Default::default()
             });
         }
-        if let Ok((_, mut transform)) = summon_query.get_mut(attack.attacker) {
+        if let Ok((_, mut transform, _)) = summon_query.get_mut(attack.attacker) {
             transform.translation.y += 8.;
         }
     }

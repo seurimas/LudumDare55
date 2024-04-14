@@ -36,6 +36,18 @@ impl Tribe {
             Tribe::Enemy => "enemy_summon_sting",
         }
     }
+
+    pub fn death_sting(&self) -> &str {
+        match self {
+            Tribe::Angel => "angel_death_sting",
+            Tribe::Undead => "undead_death_sting",
+            Tribe::Fairy => "fairy_death_sting",
+            Tribe::Construct => "construct_death_sting",
+            Tribe::Elemental => "elemental_death_sting",
+            Tribe::Demon => "demon_death_sting",
+            Tribe::Enemy => "enemy_death_sting",
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Asset, TypePath)]
@@ -188,12 +200,14 @@ impl SummonType {
 impl Into<CharacterStats> for SummonType {
     fn into(self) -> CharacterStats {
         CharacterStats {
+            is_dead: false,
             max_health: self.health,
             health: self.health,
             stamina: self.stamina,
             stamina_regen: self.stamina_regen,
             attacks: self.attacks,
             movements: self.movements,
+            name: self.summon_name,
             tribe: self.tribe,
             auras: self.auras,
             applied_auras: vec![],

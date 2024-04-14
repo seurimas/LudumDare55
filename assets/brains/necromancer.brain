@@ -1,0 +1,18 @@
+Executor([
+    User(PickFriendlyAura),
+    Wrapper(ForAllAlliesInRange(5), [User(RefreshAuraForTarget)]),
+    Selector ([
+        Sequence ([
+            User(FindNearestEnemy),
+            User(PickRandomAttack),
+            User(AttackTarget),
+            User(PickUnfriendlyAura),
+            User(RefreshAuraForTarget),
+        ]),
+        Sequence ([
+            User(FindNearestEnemy),
+            User(PickRandomMovement),
+            User(MoveTowardsTarget)
+        ])
+    ])
+])

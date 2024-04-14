@@ -14,6 +14,7 @@ SummonType (
     auras: [
         Attack ("Weakened", -1, []),
     ],
+    tribe: Undead,
     brain: "draining",
     prerequisites: (1, None),
 )
