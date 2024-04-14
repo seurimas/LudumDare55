@@ -36,6 +36,17 @@ impl SummonedMinions {
         }
         self.spawn_locations = new_spawns;
     }
+
+    pub fn mirror(&self) -> Self {
+        let mut mirrored = self.clone();
+        let mut new_spawns = HashMap::new();
+        for ((x, y), summon) in self.spawn_locations.iter() {
+            new_spawns.insert((7 - x, 7 - y), summon.clone());
+        }
+        mirrored.spawn_locations = new_spawns;
+        mirrored
+    }
+
     pub fn has_spawn_location(&self, x: usize, y: usize) -> bool {
         self.spawn_locations.contains_key(&(x, y))
     }

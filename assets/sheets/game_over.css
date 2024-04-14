@@ -34,3 +34,19 @@
     font-size: 40px;
     text-align: center;
 }
+
+.game_over__text text {
+    text-align: center;
+}
+
+.share_army {
+    width: 200px;
+    max-width: 200px;
+    background-color: #0f0;
+    border-color: black;
+    border: 2px;
+}
+
+.share_army text {
+    text-align: center;
+}

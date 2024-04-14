@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{persistence::add_load_button, prelude::*};
 
 pub struct MenuPlugin;
 
@@ -52,6 +52,7 @@ fn setup_menu(
             Menu,
         ))
         .with_children(|parent| {
+            add_load_button(parent);
             let button_colors = ButtonColors::default();
             parent
                 .spawn((

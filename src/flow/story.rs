@@ -1,6 +1,6 @@
-use bevy::log::tracing_subscriber::fmt::time;
+use bevy::{asset::AssetPath, log::tracing_subscriber::fmt::time, utils::Uuid};
 
-use crate::{battle::DeathCharacterBrain, prelude::*, summoner::NextWave};
+use crate::{battle::DeathCharacterBrain, persistence::SaveData, prelude::*, summoner::NextWave};
 
 #[derive(Serialize, Deserialize, Default, Resource, Asset, TypePath, Clone)]
 pub struct Story {
@@ -8,6 +8,44 @@ pub struct Story {
     pub winning_beats: Vec<Vec<StoryBeatType>>,
     pub losing_beats: Vec<Vec<StoryBeatType>>,
     pub agnostic_beats: Vec<Vec<StoryBeatType>>,
+}
+
+impl Story {
+    pub fn from_save_data(
+        save: &SaveData,
+        wave_assets: &mut Assets<SummonedMinions>,
+        summon_assets: &mut SummonsAssets,
+    ) -> Self {
+        summon_assets.waves = HashMap::new();
+        let mut wave_names = vec![];
+        for (i, wave) in save.armies.iter().enumerate() {
+            let mirrored_army = wave.mirror();
+            let wave_name = format!("wave_{}", i);
+            wave_names.push(wave_name.clone());
+            let handle = wave_assets.add(mirrored_army);
+            summon_assets.waves.insert(
+                FileStem::from_asset_path(&AssetPath::parse(&wave_name)),
+                handle,
+            );
+        }
+        Self {
+            waves: wave_names,
+            winning_beats: vec![],
+            losing_beats: vec![],
+            agnostic_beats: vec![
+                vec![StoryBeatType::GainMana(1)], // Before 1
+                vec![StoryBeatType::GainMana(1)], // Before 2
+                vec![StoryBeatType::GainMana(1)], // Before 3
+                vec![StoryBeatType::GainMana(1)], // Before 4
+                vec![StoryBeatType::GainMana(1)], // Before Boss.
+                vec![StoryBeatType::GainMana(3)], // Before 5
+                vec![StoryBeatType::GainMana(1)], // Before 6
+                vec![StoryBeatType::GainMana(1)], // Before 7
+                vec![StoryBeatType::GainMana(1)], // Before 8
+                vec![StoryBeatType::GainMana(2)], // Before Boss
+            ],
+        }
+    }
 }
 
 impl Story {
@@ -129,6 +167,7 @@ pub fn start_story(
 pub fn queue_next_wave(
     mut commands: Commands,
     mut story: ResMut<Story>,
+    mut save: ResMut<SaveData>,
     story_beat: Res<StoryBeat>,
     mut next_state: ResMut<NextState<GameState>>,
     mut next_wave: ResMut<NextWave>,
@@ -146,6 +185,7 @@ pub fn queue_next_wave(
             });
             return;
         }
+        save.armies.push(my_minions.clone());
         let wave = core::mem::take(&mut next_wave.0);
         enemy_minions.0 = wave;
         next_state.set(GameState::Battling);

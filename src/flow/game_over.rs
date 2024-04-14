@@ -1,5 +1,6 @@
 use crate::{
     board::{BorderTile, Tile},
+    persistence::add_save_button,
     prelude::*,
 };
 
@@ -79,6 +80,9 @@ pub fn spawn_overlay(
                         GameOverActor::Text,
                     ));
                 });
+            if victory {
+                add_save_button(parent);
+            }
         });
 }
 

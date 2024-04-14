@@ -13,6 +13,7 @@ mod bt;
 mod flow;
 mod loading;
 mod menu;
+mod persistence;
 mod prelude;
 mod state;
 mod summoner;

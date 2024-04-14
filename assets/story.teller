@@ -39,7 +39,7 @@ Story (
         [GameOver(false)], // Lost Boss
     ],
     agnostic_beats: [
-        [GainMana(1), Narration("Hint: You can remove a placed summon with Backspace.")], // Before 1
+        [GameOver(true), GainMana(1), Narration("Hint: You can remove a placed summon with Backspace.")], // Before 1
         [GainMana(1), Narration("Hint: There are three main tribes: Angel, Undead, and Fairy.\nConstructs, Elementals, and Demons are support tribes.")], // Before 2
         [GainMana(1), Narration("Hint: Support tribes only support two of the main tribes.")], // Before 3
         [GainMana(1), Narration("Hint: You can hold Space to slow down combat, or Shift/Enter to speed it up.")], // Before 4

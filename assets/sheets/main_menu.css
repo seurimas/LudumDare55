@@ -21,3 +21,16 @@
 .hidden {
     display: none;
 }
+
+.summoner_battle {
+    align-self: center;
+    width: auto;
+    max-width: auto;
+    background-color: #0f0;
+    border-color: black;
+    border: 2px;
+}
+
+.summoner_battle text {
+    text-align: center;
+}

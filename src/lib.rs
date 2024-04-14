@@ -6,6 +6,7 @@ mod bt;
 mod flow;
 mod loading;
 mod menu;
+mod persistence;
 mod prelude;
 mod state;
 mod summoner;
@@ -23,6 +24,7 @@ impl Plugin for GamePlugin {
             .add_plugins(battle::BattlePlugin)
             .add_plugins(summoner::SummonerPlugin)
             .add_plugins(flow::StoryPlugin)
+            .add_plugins(persistence::PersistencePlugin)
             .init_state::<GameState>()
             .add_systems(PostUpdate, force_stylesheet_refresh);
     }
