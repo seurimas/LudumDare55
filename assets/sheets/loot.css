@@ -11,10 +11,13 @@
 
 .loot__text {
     margin: 16px;
-    flex-grow: 1;
+    flex-grow: 0;
+    height: 64px;
+    text-align: center;
 }
 
 .loot__summons {
+    align-items: center;
     flex-grow: 2;
     margin: 8px;
 }

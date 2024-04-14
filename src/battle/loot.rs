@@ -9,6 +9,9 @@ pub struct LootScreen;
 #[derive(Component)]
 pub struct LootButton(pub SummonType);
 
+#[derive(Component)]
+pub struct LootDescriptor(pub Option<SummonType>);
+
 pub fn setup_loot_screen(
     mut commands: Commands,
     styles: Res<StyleAssets>,
@@ -73,6 +76,21 @@ pub fn setup_loot_screen(
                         buttons.push((button, LootButton(summon.clone())));
                     }
                 });
+            parent.spawn((
+                TextBundle {
+                    text: Text::from_sections(vec![TextSection {
+                        value: "".to_string(),
+                        style: TextStyle {
+                            font: Default::default(),
+                            font_size: 20.0,
+                            color: Color::WHITE,
+                        },
+                    }]),
+                    ..Default::default()
+                },
+                Class::new("loot__text"),
+                LootDescriptor(None),
+            ));
         });
     for (button, component) in buttons {
         commands.entity(button).insert(component);
@@ -86,6 +104,7 @@ pub fn handle_loot_button_click(
         (&mut Class, &mut SummonButton, &LootButton, &Interaction),
         Changed<Interaction>,
     >,
+    mut descriptor_query: Query<(&mut Text, &mut LootDescriptor)>,
 ) {
     for (mut class, mut summon, loot, interaction) in query.iter_mut() {
         match *interaction {
@@ -100,6 +119,10 @@ pub fn handle_loot_button_click(
             }
             Interaction::Hovered => {
                 class.add("hovered");
+                for (mut text, mut descriptor) in descriptor_query.iter_mut() {
+                    descriptor.0 = Some(loot.0.clone());
+                    text.sections = loot.0.descriptor();
+                }
             }
             Interaction::None => {
                 summon.0 = false;

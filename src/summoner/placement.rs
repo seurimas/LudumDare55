@@ -2,17 +2,25 @@ use crate::prelude::*;
 
 use super::{mana, HOTKEYS};
 
-#[derive(Serialize, Deserialize, Clone, Debug, Resource, Default)]
+#[derive(Serialize, Deserialize, Clone, Debug, Resource, Default, Asset, TypePath)]
 pub struct SummonedMinions {
     spawn_locations: HashMap<(usize, usize), String>,
+    #[serde(default)]
     mana: i32,
     #[serde(skip)]
     mana_locations: HashMap<(usize, usize), i32>,
 }
 
+#[derive(Resource, Default)]
+pub struct EnemyMinions(pub SummonedMinions);
+
 impl SummonedMinions {
     pub fn has_spawn_location(&self, x: usize, y: usize) -> bool {
         self.spawn_locations.contains_key(&(x, y))
+    }
+
+    pub fn summons(&self) -> usize {
+        self.spawn_locations.len()
     }
 
     pub fn add_summon(&mut self, summon: SummonType, x: usize, y: usize) {
@@ -32,6 +40,15 @@ impl SummonedMinions {
         } else {
             false
         }
+    }
+
+    pub fn pop_summon(&mut self) -> Option<(usize, usize, String)> {
+        let (x, y) = self.spawn_locations.keys().next()?.clone();
+        let summon_name = self.spawn_locations.remove(&(x, y))?;
+        if let Some(mana_cost) = self.mana_locations.remove(&(x, y)) {
+            self.mana -= mana_cost;
+        }
+        Some((x, y, summon_name))
     }
 
     pub fn drain_summons(&mut self) -> Vec<(usize, usize, String)> {

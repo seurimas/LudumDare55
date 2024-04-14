@@ -1,5 +1,31 @@
 use crate::prelude::*;
 
+#[derive(Serialize, Deserialize, Default, Clone, Debug, PartialEq, Eq)]
+pub enum Tribe {
+    Angel,
+    Undead,
+    Fairy,
+    Construct,
+    Elemental,
+    Demon,
+    #[default]
+    Other,
+}
+
+impl Tribe {
+    pub fn tagline(&self) -> &str {
+        match self {
+            Tribe::Angel => "Angel - Powerful warriors with divine abilities.",
+            Tribe::Undead => "Undead - Reanimated corpses with terrifying strength",
+            Tribe::Fairy => "Fairy - Forces of nature and balance",
+            Tribe::Construct => "Construct - Support Angel and Undead with auras",
+            Tribe::Elemental => "Elemental - Support Angel and Fairy with boons upon dying",
+            Tribe::Demon => "Demon - Support Undead and Fairy with powerful pacts",
+            Tribe::Other => "Mysterious",
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Asset, TypePath)]
 pub struct SummonType {
     summon_name: String,
@@ -10,6 +36,10 @@ pub struct SummonType {
     stamina_regen: i32,
     attacks: Vec<Attack>,
     movements: Vec<Movement>,
+    #[serde(default)]
+    tagline: String,
+    #[serde(default)]
+    tribe: Tribe,
     brain: String,
     prerequisites: (i32, Option<String>),
 }
@@ -25,6 +55,8 @@ impl SummonType {
             stamina_regen: 1,
             attacks: vec![Attack::debug()],
             movements: vec![Movement::debug()],
+            tagline: "You shouldn't see this".to_string(),
+            tribe: Tribe::Other,
             brain: "fighter".to_string(),
             prerequisites: (0, None),
         }
@@ -48,6 +80,83 @@ impl SummonType {
 
     pub fn prerequisites(&self) -> (i32, Option<String>) {
         self.prerequisites.clone()
+    }
+
+    pub fn descriptor(&self) -> Vec<TextSection> {
+        vec![
+            TextSection {
+                value: self.summon_name.clone(),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 24.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: "\n".to_string(),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: self.tagline.clone(),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: "\n".to_string(),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: self.tribe.tagline().to_string(),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: "\n".to_string(),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: format!("Health: {}", self.health),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::RED,
+                },
+            },
+            TextSection {
+                value: "\n".to_string(),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::WHITE,
+                },
+            },
+            TextSection {
+                value: format!("Mana Cost: {}", self.mana_cost),
+                style: TextStyle {
+                    font: Default::default(),
+                    font_size: 12.0,
+                    color: Color::BLUE,
+                },
+            },
+        ]
     }
 }
 

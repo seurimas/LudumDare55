@@ -1,0 +1,5 @@
+SummonedMinions (
+    spawn_locations: {
+        (6, 7): "Bones"
+    }
+)

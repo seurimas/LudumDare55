@@ -11,6 +11,8 @@ SummonType (
     movements: [
         Movement (stamina_cost: 1, tiles: 1),
     ],
+    tagline: "A magical watcher with a ranged attack.",
+    tribe: Construct,
     brain: "fighter",
     prerequisites: (1, None),
 )

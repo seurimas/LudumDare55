@@ -1,5 +1,5 @@
 SummonType (
-    summon_name: "Angel",
+    summon_name: "Cherub",
     sprite_idx: 3,
     health: 10,
     mana_cost: 2,
@@ -11,6 +11,8 @@ SummonType (
     movements: [
         Movement (stamina_cost: 3, tiles: 1),
     ],
+    tagline: "A small angel with a ranged attack.",
+    tribe: Angel,
     brain: "fighter",
     prerequisites: (1, None),
 )

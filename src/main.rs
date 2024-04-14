@@ -10,6 +10,7 @@ use LudumDare55::GamePlugin;
 mod battle;
 mod board;
 mod bt;
+mod flow;
 mod loading;
 mod menu;
 mod prelude;

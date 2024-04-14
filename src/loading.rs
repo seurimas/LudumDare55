@@ -19,6 +19,10 @@ impl Plugin for LoadingPlugin {
         .add_plugins(bevy_common_assets::ron::RonAssetPlugin::<SummonType>::new(
             &["summon"],
         ))
+        .add_plugins(bevy_common_assets::ron::RonAssetPlugin::<Story>::new(&[
+            "teller",
+        ]))
+        .add_plugins(bevy_common_assets::ron::RonAssetPlugin::<SummonedMinions>::new(&["wave"]))
         .add_plugins(bevy_common_assets::ron::RonAssetPlugin::<CharacterBrainDef>::new(&["brain"]));
     }
 }
@@ -60,6 +64,12 @@ pub struct TextureAssets {
 pub struct SummonsAssets {
     #[asset(path = "summons", collection(typed, mapped))]
     pub player_summons: HashMap<FileStem, Handle<SummonType>>,
+    #[asset(path = "npc", collection(typed, mapped))]
+    pub npc_summons: HashMap<FileStem, Handle<SummonType>>,
+    #[asset(path = "waves", collection(typed, mapped))]
+    pub waves: HashMap<FileStem, Handle<SummonedMinions>>,
+    #[asset(path = "story.teller")]
+    pub story_teller: Handle<Story>,
 }
 
 #[derive(AssetCollection, Resource)]

@@ -15,6 +15,7 @@ impl Plugin for SummonerPlugin {
             .init_resource::<KnownSummons>()
             // Place the summons on the board
             .init_resource::<SummonedMinions>()
+            .init_resource::<EnemyMinions>()
             .add_systems(
                 Update,
                 (place_summon, animate_summons, remove_summon)
@@ -35,6 +36,15 @@ impl Plugin for SummonerPlugin {
                 Update,
                 (animate_summoning_scroll_closing,).run_if(in_state(GameState::Battling)),
             )
-            .add_systems(OnEnter(GameState::Summoning), spawn_summoning_scroll);
+            .add_systems(
+                OnEnter(GameState::Summoning),
+                (spawn_summoning_scroll, clear_summons),
+            );
+    }
+}
+
+fn clear_summons(mut commands: Commands, query: Query<(Entity, &Summon)>) {
+    for (entity, _) in query.iter() {
+        commands.entity(entity).despawn_recursive();
     }
 }

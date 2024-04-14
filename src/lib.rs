@@ -3,6 +3,7 @@ use prelude::*;
 mod battle;
 mod board;
 mod bt;
+mod flow;
 mod loading;
 mod menu;
 mod prelude;
@@ -21,6 +22,7 @@ impl Plugin for GamePlugin {
             .add_plugins(board::BoardPlugin)
             .add_plugins(battle::BattlePlugin)
             .add_plugins(summoner::SummonerPlugin)
+            .add_plugins(flow::StoryPlugin)
             .init_state::<GameState>();
     }
 }

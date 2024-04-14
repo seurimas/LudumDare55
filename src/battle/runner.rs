@@ -36,11 +36,13 @@ pub fn prune_turn_order(
 }
 
 pub fn end_battle(
+    my_minions: Res<SummonedMinions>,
+    enemy_minions: Res<EnemyMinions>,
     mut next_state: ResMut<NextState<GameState>>,
     fighters: Query<(Entity, &Faction, &Summon, &CharacterStats)>,
 ) {
-    let mut player_units = 0;
-    let mut enemy_units = 0;
+    let mut player_units = my_minions.summons();
+    let mut enemy_units = enemy_minions.0.summons();
     for (_entity, faction, _summon, stats) in fighters.iter() {
         match faction {
             Faction::Player => {

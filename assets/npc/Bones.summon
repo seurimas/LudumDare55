@@ -1,7 +1,7 @@
 SummonType (
-    summon_name: "Skeleton",
+    summon_name: "Bones",
     sprite_idx: 2,
-    health: 10,
+    health: 5,
     mana_cost: 1,
     stamina: 10,
     stamina_regen: 10,
@@ -11,8 +11,6 @@ SummonType (
     movements: [
         Movement (stamina_cost: 5, tiles: 1),
     ],
-    tagline: "Your very basic undead.",
-    tribe: Undead,
     brain: "fighter",
     prerequisites: (1, None),
 )
