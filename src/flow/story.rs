@@ -26,7 +26,7 @@ impl Story {
             wave_names.push(wave_name.clone());
             let handle = wave_assets.add(mirrored_army);
             summon_assets.waves.insert(
-                FileStem::from_asset_path(&AssetPath::parse(&wave_name)),
+                AssetFileStem::from_asset_path(&AssetPath::parse(&wave_name)),
                 handle,
             );
         }
@@ -75,7 +75,11 @@ impl Story {
             self.winning_beats.remove(0);
         }
         let mut losing = if self.losing_beats.is_empty() {
-            vec![StoryBeatType::GameOver(false)]
+            if self.waves.is_empty() {
+                vec![StoryBeatType::GameOver(false)]
+            } else {
+                vec![]
+            }
         } else {
             self.losing_beats.remove(0)
         };

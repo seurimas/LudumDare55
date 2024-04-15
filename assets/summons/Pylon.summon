@@ -3,13 +3,13 @@ SummonType (
     summon_name: "Pylon",
     sprite_idx: 20,
     health: 5,
-    mana_cost: 1,
+    mana_cost: 5,
     stamina: 10,
     stamina_regen: 5,
     attacks: [],
     movements: [],
     auras: [
-        Attack("Empowered", 5, [Angel, Undead, Construct])
+        Attack("Empowered", 2, [Angel, Undead, Construct])
     ],
     tagline: "An immobile support construct, boosting the attack of nearby Angel, Undead, and Constructs.",
     tribe: Construct,

@@ -149,7 +149,7 @@ pub fn run_battle(
                 Faction::Enemy => player_units.clone(),
             }
             .iter()
-            .filter(|(x, y)| *x != summon.x || *y != summon.y && !dead_units.contains(&(*x, *y)))
+            .filter(|(x, y)| !dead_units.contains(&(*x, *y)))
             .cloned()
             .collect(),
             allies: match faction {
@@ -157,7 +157,7 @@ pub fn run_battle(
                 Faction::Enemy => enemy_units,
             }
             .iter()
-            .filter(|(x, y)| *x != summon.x || *y != summon.y && !dead_units.contains(&(*x, *y)))
+            .filter(|(x, y)| !dead_units.contains(&(*x, *y)))
             .cloned()
             .collect(),
         };

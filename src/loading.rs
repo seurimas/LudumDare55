@@ -44,7 +44,7 @@ pub struct AudioAssets {
         ),
         collection(typed, mapped)
     )]
-    pub summon_stings: HashMap<FileStem, Handle<AudioSource>>,
+    pub summon_stings: HashMap<AssetFileStem, Handle<AudioSource>>,
     #[asset(
         paths(
             "audio/angel_death_sting.wav",
@@ -57,7 +57,7 @@ pub struct AudioAssets {
         ),
         collection(typed, mapped)
     )]
-    pub death_stings: HashMap<FileStem, Handle<AudioSource>>,
+    pub death_stings: HashMap<AssetFileStem, Handle<AudioSource>>,
     #[asset(path = "audio/defeat_sting.wav")]
     pub defeat_sting: Handle<AudioSource>,
     #[asset(path = "audio/victory_sting.wav")]
@@ -121,18 +121,82 @@ pub struct TextureAssets {
 
 #[derive(AssetCollection, Resource)]
 pub struct SummonsAssets {
-    #[asset(path = "summons", collection(typed, mapped))]
-    pub player_summons: HashMap<FileStem, Handle<SummonType>>,
-    #[asset(path = "npc", collection(typed, mapped))]
-    pub npc_summons: HashMap<FileStem, Handle<SummonType>>,
-    #[asset(path = "waves", collection(typed, mapped))]
-    pub waves: HashMap<FileStem, Handle<SummonedMinions>>,
+    #[asset(
+        paths(
+            "summons/Bane.summon",
+            "summons/Brutalizer.summon",
+            "summons/Butcher.summon",
+            "summons/Cherub.summon",
+            "summons/Ember.summon",
+            "summons/Feline.summon",
+            "summons/Ghost.summon",
+            "summons/Ghoul.summon",
+            "summons/Golem.summon",
+            "summons/Guardian.summon",
+            "summons/Pixie.summon",
+            "summons/Pylon.summon",
+            "summons/Seraph.summon",
+            "summons/Skeleton.summon",
+            "summons/Undine.summon",
+            "summons/Vampire.summon",
+            "summons/Virtue.summon",
+            "summons/Vulpine.summon",
+            "summons/Watcher.summon",
+            "summons/Wisp.summon",
+            "summons/Wolfine.summon",
+        ),
+        collection(typed, mapped)
+    )]
+    pub player_summons: HashMap<AssetFileStem, Handle<SummonType>>,
+    #[asset(
+        paths(
+            "npc/Bones.summon",
+            "npc/Death.summon",
+            "npc/Pain.summon",
+            "npc/Necromancer.summon",
+        ),
+        collection(typed, mapped)
+    )]
+    pub npc_summons: HashMap<AssetFileStem, Handle<SummonType>>,
+    #[asset(
+        paths(
+            "waves/wave0.wave",
+            "waves/wave1.wave",
+            "waves/wave2.wave",
+            "waves/wave3.wave",
+            "waves/wave4.wave",
+            "waves/wave5.wave",
+            "waves/wave6.wave",
+            "waves/wave7.wave",
+            "waves/wave8.wave",
+            "waves/boss0.wave",
+            "waves/boss1.wave",
+        ),
+        collection(typed, mapped)
+    )]
+    pub waves: HashMap<AssetFileStem, Handle<SummonedMinions>>,
     #[asset(path = "story.teller")]
     pub story_teller: Handle<Story>,
 }
 
 #[derive(AssetCollection, Resource)]
 pub struct BrainAssets {
-    #[asset(path = "brains", collection(typed, mapped))]
-    pub brains: HashMap<FileStem, Handle<CharacterBrainDef>>,
+    #[asset(
+        paths(
+            "brains/construct.brain",
+            "brains/demon.brain",
+            "brains/death.brain",
+            "brains/draining.brain",
+            "brains/elemental_buff_death.brain",
+            "brains/evading_debuff_nearest.brain",
+            "brains/evading_prioritized.brain",
+            "brains/evading.brain",
+            "brains/fighter_prioritized.brain",
+            "brains/fighter.brain",
+            "brains/large_construct.brain",
+            "brains/necromancer.brain",
+        ),
+        collection(typed, mapped)
+    )]
+    pub brains: HashMap<AssetFileStem, Handle<CharacterBrainDef>>,
 }

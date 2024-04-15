@@ -1,7 +1,7 @@
 #![enable(implicit_some)]
 SummonType (
     summon_name: "Undine",
-    sprite_idx: 14,
+    sprite_idx: 22,
     health: 10,
     mana_cost: 3,
     stamina: 10,

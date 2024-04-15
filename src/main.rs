@@ -5,9 +5,12 @@ use bevy::{
     window::{Window, WindowPlugin, WindowResolution},
     DefaultPlugins,
 };
-use LudumDare55::GamePlugin;
+mod game;
+use game::GamePlugin;
 
 mod battle;
+#[cfg(target_arch = "wasm32")]
+pub mod bindings;
 mod board;
 mod bt;
 mod flow;

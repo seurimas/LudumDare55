@@ -7,8 +7,8 @@ SummonType (
     stamina: 10,
     stamina_regen: 5,
     attacks: [
-        Attack (stamina_cost: 10, damage: 1, range: 2),
-        Attack (stamina_cost: 10, damage: 2, range: 4),
+        Attack (stamina_cost: 20, damage: 1, range: 2),
+        Attack (stamina_cost: 10, damage: 1, range: 4),
     ],
     movements: [
         Movement (stamina_cost: 10, tiles: 1),
