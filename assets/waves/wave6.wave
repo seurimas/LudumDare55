@@ -1,5 +1,6 @@
 SummonedMinions (
     spawn_locations: {
+        (4, 7): "Death",
         (2, 7): "Pain",
         (9, 9): "Ghoul",
         (9, 10): "Ghoul",
