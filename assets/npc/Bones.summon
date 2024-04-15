@@ -14,4 +14,5 @@ SummonType (
     tribe: Undead,
     brain: "fighter",
     prerequisites: (1, None),
+    short_code: "1",
 )

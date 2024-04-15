@@ -48,6 +48,41 @@ impl SummonedMinions {
         mirrored
     }
 
+    pub fn compress(
+        &mut self,
+        summon_assets: &SummonsAssets,
+        assets_summoned: &Assets<SummonType>,
+    ) {
+        let mut short_code = HashMap::new();
+        for (_, summon) in summon_assets.player_summons.iter() {
+            let summon_type = assets_summoned.get(&*summon).unwrap();
+            short_code.insert(summon_type.name().to_string(), summon_type.short_code());
+        }
+        let mut new_spawns = HashMap::new();
+        for ((x, y), summon) in self.spawn_locations.iter() {
+            if let Some(short_code) = short_code.get(summon) {
+                new_spawns.insert((*x, *y), short_code.to_string());
+            }
+        }
+        self.spawn_locations = new_spawns;
+        self.mana_locations = HashMap::new();
+    }
+
+    pub fn expand(&mut self, summon_assets: &SummonsAssets, assets_summoned: &Assets<SummonType>) {
+        let mut short_code = HashMap::new();
+        for (_, summon) in summon_assets.player_summons.iter() {
+            let summon_type = assets_summoned.get(&*summon).unwrap();
+            short_code.insert(summon_type.short_code().to_string(), summon_type.name());
+        }
+        let mut new_spawns = HashMap::new();
+        for ((x, y), summon) in self.spawn_locations.iter() {
+            if let Some(summon_name) = short_code.get(summon) {
+                new_spawns.insert((*x, *y), summon_name.to_string());
+            }
+        }
+        self.spawn_locations = new_spawns;
+    }
+
     pub fn has_spawn_location(&self, x: usize, y: usize) -> bool {
         self.spawn_locations.contains_key(&(x, y))
     }

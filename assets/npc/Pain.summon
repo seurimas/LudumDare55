@@ -17,4 +17,5 @@ SummonType (
     tribe: Demon,
     brain: "evading_debuff_nearest",
     prerequisites: (1, None),
+    short_code: "4",
 )

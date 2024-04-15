@@ -17,4 +17,5 @@ SummonType (
     tribe: Undead,
     brain: "draining",
     prerequisites: (1, None),
+    short_code: "2",
 )

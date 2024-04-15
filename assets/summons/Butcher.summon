@@ -19,4 +19,5 @@ SummonType (
     tribe: Demon,
     brain: "demon",
     prerequisites: (5, None),
+    short_code: "C",
 )

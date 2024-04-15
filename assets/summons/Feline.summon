@@ -20,4 +20,5 @@ SummonType (
     tribe: Fairy,
     brain: "draining",
     prerequisites: (1, "Vulpine"),
+    short_code: "F",
 )

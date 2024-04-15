@@ -15,4 +15,5 @@ SummonType (
     tribe: Construct,
     brain: "large_construct",
     prerequisites: (5, "Golem"),
+    short_code: "L",
 )

@@ -20,4 +20,5 @@ SummonType (
     brain: "fighter",
     death_brain: "elemental_buff_death",
     prerequisites: (3, None),
+    short_code: "T",
 )

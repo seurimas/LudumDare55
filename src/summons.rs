@@ -69,6 +69,7 @@ pub struct SummonType {
     brain: String,
     #[serde(default)]
     death_brain: String,
+    short_code: String,
     prerequisites: (i32, Option<String>),
 }
 
@@ -86,6 +87,7 @@ impl SummonType {
             auras: vec![],
             tagline: "You shouldn't see this".to_string(),
             tribe: Tribe::Enemy,
+            short_code: "dbg".to_string(),
             brain: "fighter".to_string(),
             death_brain: "".to_string(),
             prerequisites: (0, None),
@@ -94,6 +96,10 @@ impl SummonType {
 
     pub fn name(&self) -> &str {
         &self.summon_name
+    }
+
+    pub fn short_code(&self) -> &str {
+        &self.short_code
     }
 
     pub fn get_brain(&self, brain_assets: &BrainAssets) -> Option<Handle<CharacterBrainDef>> {

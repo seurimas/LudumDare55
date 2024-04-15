@@ -22,4 +22,5 @@ SummonType (
     brain: "fighter_prioritized",
     death_brain: "elemental_buff_death",
     prerequisites: (3, "Wisp"),
+    short_code: "E",
 )

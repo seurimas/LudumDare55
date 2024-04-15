@@ -16,4 +16,5 @@ SummonType (
     tribe: Fairy,
     brain: "fighter",
     prerequisites: (1, "Pixie"),
+    short_code: "U",
 )

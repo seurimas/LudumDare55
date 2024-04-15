@@ -3,7 +3,7 @@ SummonType (
     summon_name: "Vampire",
     sprite_idx: 26,
     health: 10,
-    mana_cost: 5,
+    mana_cost: 4,
     stamina: 10,
     stamina_regen: 5,
     attacks: [
@@ -19,4 +19,5 @@ SummonType (
     tribe: Undead,
     brain: "draining",
     prerequisites: (5, "Ghost"),
+    short_code: "P",
 )

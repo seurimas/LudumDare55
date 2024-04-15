@@ -16,4 +16,5 @@ SummonType (
     tribe: Angel,
     brain: "fighter",
     prerequisites: (1, "Cherub"),
+    short_code: "J",
 )

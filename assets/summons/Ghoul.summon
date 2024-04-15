@@ -16,4 +16,5 @@ SummonType (
     tribe: Undead,
     brain: "fighter",
     prerequisites: (1, "Skeleton"),
+    short_code: "H",
 )

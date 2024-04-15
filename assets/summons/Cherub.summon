@@ -17,4 +17,5 @@ SummonType (
     tribe: Angel,
     brain: "fighter_prioritized",
     prerequisites: (1, None),
+    short_code: "D",
 )

@@ -3,7 +3,7 @@ SummonType (
     summon_name: "Virtue",
     sprite_idx: 19,
     health: 10,
-    mana_cost: 2,
+    mana_cost: 3,
     stamina: 10,
     stamina_regen: 20,
     attacks: [
@@ -17,4 +17,5 @@ SummonType (
     tribe: Angel,
     brain: "evading_prioritized",
     prerequisites: (1, "Guardian"),
+    short_code: "Q",
 )

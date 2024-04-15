@@ -16,4 +16,5 @@ SummonType (
     tribe: Fairy,
     brain: "evading",
     prerequisites: (1, "Wolfine"),
+    short_code: "R",
 )

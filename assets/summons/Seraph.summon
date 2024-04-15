@@ -3,20 +3,21 @@ SummonType (
     summon_name: "Seraph",
     sprite_idx: 27,
     health: 10,
-    mana_cost: 2,
+    mana_cost: 4,
     stamina: 10,
     stamina_regen: 5,
     attacks: [
-        Attack (stamina_cost: 10, damage: 4, range: 4),
+        Attack (stamina_cost: 20, damage: 4, range: 4),
     ],
     movements: [
         Movement (stamina_cost: 10, tiles: 1),
     ],
     auras: [
-        Attack("Seraphic Aura", 2, [Angel])
+        Attack("Seraphic Aura", 1, [Angel])
     ],
     tagline: "A power angel with a holy aura, empowering angels nearby.",
     tribe: Angel,
     brain: "construct",
     prerequisites: (1, "Virtue"),
+    short_code: "M",
 )

@@ -91,6 +91,7 @@ pub fn save_on_click(
 
 pub fn load_on_click(
     interactions: Query<&Interaction, (Changed<Interaction>, With<LoadArmyButton>)>,
+    summon_types: Res<Assets<SummonType>>,
     mut wave_assets: ResMut<Assets<SummonedMinions>>,
     mut summon_assets: ResMut<SummonsAssets>,
     mut story: ResMut<Story>,
@@ -100,7 +101,12 @@ pub fn load_on_click(
         if *interaction == Interaction::Pressed {
             match retrieve_from_runes::<SaveData>() {
                 Ok(save) => {
-                    *story = Story::from_save_data(&save, &mut wave_assets, &mut summon_assets);
+                    *story = Story::from_save_data(
+                        &save,
+                        &summon_types,
+                        &mut wave_assets,
+                        &mut summon_assets,
+                    );
                     next_state.set(GameState::Looting);
                 }
                 Err(e) => {

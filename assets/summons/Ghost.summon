@@ -16,4 +16,5 @@ SummonType (
     tribe: Undead,
     brain: "evading",
     prerequisites: (1, "Ghoul"),
+    short_code: "G",
 )

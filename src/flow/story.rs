@@ -13,13 +13,15 @@ pub struct Story {
 impl Story {
     pub fn from_save_data(
         save: &SaveData,
+        summon_types: &Assets<SummonType>,
         wave_assets: &mut Assets<SummonedMinions>,
         summon_assets: &mut SummonsAssets,
     ) -> Self {
         summon_assets.waves = HashMap::new();
         let mut wave_names = vec![];
         for (i, wave) in save.armies.iter().enumerate() {
-            let mirrored_army = wave.mirror();
+            let mut mirrored_army = wave.mirror();
+            mirrored_army.expand(summon_assets, summon_types);
             let wave_name = format!("wave_{}", i);
             wave_names.push(wave_name.clone());
             let handle = wave_assets.add(mirrored_army);
@@ -193,6 +195,8 @@ pub fn queue_next_wave(
     mut enemy_minions: ResMut<EnemyMinions>,
     keys: Res<ButtonInput<KeyCode>>,
     summon_entities: Query<Entity, With<Summon>>,
+    summon_types: Res<Assets<SummonType>>,
+    summons: Res<SummonsAssets>,
     my_minions: Res<SummonedMinions>,
     sounds: Res<AudioAssets>,
 ) {
@@ -204,7 +208,9 @@ pub fn queue_next_wave(
             });
             return;
         }
-        save.armies.push(my_minions.clone());
+        let mut short_army = my_minions.clone();
+        short_army.compress(&summons, &summon_types);
+        save.armies.push(short_army);
         let wave = core::mem::take(&mut next_wave.0);
         enemy_minions.0 = wave;
         next_state.set(GameState::Battling);
